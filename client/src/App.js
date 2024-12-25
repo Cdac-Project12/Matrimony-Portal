@@ -10,7 +10,8 @@ import Matches from './pages/Matches/Matches';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Message from './pages/Mesage/Message';
 import MessageScreen from './pages/MessageScreen/MessageScreen';
-// import ViewProfile from './pages/ViewProfile/ViewProfile';
+import ViewProfile from './pages/ViewProfile/ViewProfile';
+
 
 
 
@@ -27,7 +28,8 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/message" element={<Message />} />
         <Route path="/messages/:id" element={<MessageScreen />} />
-        {/* <Route path="/messages/:id" element={<ViewProfile />} /> */}
+        <Route path="/view-profile/:name" element={<ViewProfile />} />
+        
 
 
       </Routes>
