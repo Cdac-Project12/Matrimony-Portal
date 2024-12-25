@@ -1,21 +1,5 @@
-.btn {
-  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
-}
-
-.btn:hover {
-  background-color: #0056b3;
-  color: #fff;
-}
-
-.card:hover {
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease-in-out;
-}
-
-.card img {
-  transition: transform 0.3s ease-in-out;
-}
-
-.card img:hover {
-  transform: scale(1.1);
+.carousel-img {
+  object-fit: cover; /* Ensures images cover the area while maintaining aspect ratio */
+  height: 500px; /* Set a fixed height for the carousel images */
+  width: 100%; /* Ensures the images stretch to fill the width */
 }

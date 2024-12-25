@@ -7,8 +7,8 @@ const Sidebar = () => {
       <h3 className="mb-4">Matrimony</h3>
       <ul className="list-unstyled">
         <li>
-          <Link to="/" className="nav-link">
-            <i className="fa fa-home me-2"></i>Home
+          <Link to="/dashboard" className="nav-link">
+            <i className="fa fa-home me-2"></i>Dashboard
           </Link>
         </li>
         <li>
