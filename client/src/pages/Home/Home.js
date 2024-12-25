@@ -20,7 +20,7 @@ const Home = () => {
           </div>
           <div className="carousel-item">
             <img
-              src="https://via.placeholder.com/1920x600?text=Matrimony+App+Image+2"
+              src="https://www.netguru.com/hubfs/web%20secuity%20best%20practices.jpeg"
               className="d-block w-100 carousel-img"
               alt="Matrimony Image 2"
             />
@@ -31,7 +31,7 @@ const Home = () => {
           </div>
           <div className="carousel-item">
             <img
-              src="https://via.placeholder.com/1920x600?text=Matrimony+App+Image+3"
+              src="https://www.gottman.com/wp-content/uploads/2016/09/10-Rules-for-a-Successful-Second-Marriage_HI-992x540.jpg"
               className="d-block w-100 carousel-img"
               alt="Matrimony Image 3"
             />
@@ -67,7 +67,7 @@ const Home = () => {
           <div className="col-md-4">
             <div className="card">
               <img
-                src="https://via.placeholder.com/300x200"
+                src="https://ik.imagekit.io/laxaar/1709011725967Group-1000001793.png"
                 className="card-img-top"
                 alt="Feature 1"
               />
@@ -80,7 +80,7 @@ const Home = () => {
           <div className="col-md-4">
             <div className="card">
               <img
-                src="https://via.placeholder.com/300x200"
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR84FmPjLp0oXxaVqX_vW7BrjggOsLEZ01zqw&s"
                 className="card-img-top"
                 alt="Feature 2"
               />
@@ -93,7 +93,7 @@ const Home = () => {
           <div className="col-md-4">
             <div className="card">
               <img
-                src="https://via.placeholder.com/300x200"
+                src="https://mohabbatein.com/wp-content/uploads/2023/11/blog-1-top.jpg"
                 className="card-img-top"
                 alt="Feature 3"
               />

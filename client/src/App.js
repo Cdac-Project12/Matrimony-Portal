@@ -8,9 +8,15 @@ import Register from './pages/Register/Register';
 import Profile from './pages/Profile/Profile';
 import Matches from './pages/Matches/Matches';
 import Dashboard from './pages/Dashboard/Dashboard';
-import Messages from './pages/Messages/Messages';
 import Settings from './pages/Settings/Settings';
 import { DarkModeProvider } from './components/Context/DarkModeContext';
+import Message from './pages/Mesage/Message';
+import MessageScreen from './pages/MessageScreen/MessageScreen';
+import ViewProfile from './pages/ViewProfile/ViewProfile';
+
+
+
+
 
 const App = () => {
   return (
@@ -25,8 +31,13 @@ const App = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/matches" element={<Matches />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/messages" element={<Messages />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/message" element={<Message />} />
+        <Route path="/messages/:id" element={<MessageScreen />} />
+        <Route path="/view-profile/:name" element={<ViewProfile />} />
+        
+
+
       </Routes>
       <Footer />
     </Router>
