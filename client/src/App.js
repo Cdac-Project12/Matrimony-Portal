@@ -8,9 +8,14 @@ import Register from './pages/Register/Register';
 import Profile from './pages/Profile/Profile';
 import Matches from './pages/Matches/Matches';
 import Dashboard from './pages/Dashboard/Dashboard';
+import Messages from './pages/Messages/Messages';
+import Settings from './pages/Settings/Settings';
+import { DarkModeProvider } from './components/Context/DarkModeContext';
 
 const App = () => {
   return (
+    <DarkModeProvider>
+
     <Router>
       <Navbar />
       <Routes>
@@ -20,10 +25,12 @@ const App = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/matches" element={<Matches />} />
         <Route path="/dashboard" element={<Dashboard />} />
-
+        <Route path="/messages" element={<Messages />} />
+        <Route path="/settings" element={<Settings />} />
       </Routes>
       <Footer />
     </Router>
+    </DarkModeProvider>
   );
 };
 
