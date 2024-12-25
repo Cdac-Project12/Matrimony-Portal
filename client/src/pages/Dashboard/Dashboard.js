@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
 import Layout from '../../components/Layout/Layout';
 
 const Dashboard = () => {
@@ -19,9 +19,9 @@ const Dashboard = () => {
 
   const actions = [
     { label: 'View Matches', icon: 'fa-heart', color: 'text-danger', path: '/matches' },
-    { label: 'Messages', icon: 'fa-envelope', color: 'text-primary' },
-    { label: 'Settings', icon: 'fa-cog', color: 'text-success' },
-    { label: 'Profile', icon: 'fa-user', color: 'text-warning' },
+    { label: 'Messages', icon: 'fa-envelope', color: 'text-primary', path: '/message' },
+    { label: 'Settings', icon: 'fa-cog', color: 'text-success', path: '/settings' },
+    { label: 'Profile', icon: 'fa-user', color: 'text-warning', path: '/profile' },
   ];
 
   const notifications = [
@@ -75,12 +75,14 @@ const Dashboard = () => {
         <div className="row g-4 mt-5 justify-content-center">
           {actions.map((action, index) => (
             <div className="col-md-3 col-sm-6" key={index}>
-              <div className="card text-center shadow-lg border-0 h-100">
-                <div className={`card-body ${action.color}`}>
-                  <i className={`fa ${action.icon} fa-3x mb-3`} />
-                  <h5>{action.label}</h5>
+              <Link to={action.path} className="text-decoration-none">
+                <div className="card text-center shadow-lg border-0 h-100">
+                  <div className={`card-body ${action.color}`}>
+                    <i className={`fa ${action.icon} fa-3x mb-3`} />
+                    <h5>{action.label}</h5>
+                  </div>
                 </div>
-              </div>
+              </Link>
             </div>
           ))}
         </div>
@@ -110,7 +112,7 @@ const Dashboard = () => {
                       src={match.img}
                       className="card-img-top rounded-circle mx-auto mb-3"
                       alt={match.name}
-                      style={{ width: '150px', height: '150px' }} // Ensures all images are the same size
+                      style={{ width: '150px', height: '150px' }}
                     />
                     <h3 className="card-title mb-2">{match.name}</h3>
                     <p className="text-muted">Age: {match.age}</p>
