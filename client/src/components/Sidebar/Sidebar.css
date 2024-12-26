@@ -4,11 +4,11 @@
     position: fixed;
     top: 0;
     left: 0;
-    background-color: #1c1c1c; /* Dark background */
-    transition: all 0.3s ease-in-out; /* Smooth transition */
+    background-color: #1c1c1c;
+    transition: all 0.3s ease-in-out;
     z-index: 1000;
     overflow-y: auto;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
   }
   
   .sidebar h3 {
@@ -34,29 +34,29 @@
     color: #ddd;
     display: flex;
     align-items: center;
-    transition: all 0.2s ease-in-out; /* Smooth hover effect */
+    transition: all 0.2s ease-in-out; 
   }
   
   .sidebar .nav-link.active {
-    background-color: #343a40; /* Highlight active link */
+    background-color: #343a40; 
     color: #fff;
-    transform: translateX(5px); /* Slight movement on active */
+    transform: translateX(5px); 
   }
   
   .sidebar .nav-link:hover {
-    background-color: #50575e; /* Hover effect */
+    background-color: #50575e;
     color: #fff;
-    transform: translateX(5px); /* Smooth slide effect */
+    transform: translateX(5px);
   }
   
   .sidebar .sidebar-icon {
     font-size: 1.4rem;
     margin-right: 10px;
-    transition: transform 0.3s ease-in-out; /* Smooth icon effect */
+    transition: transform 0.3s ease-in-out; 
   }
   
   .sidebar .nav-link:hover .sidebar-icon {
-    transform: scale(1.2); /* Slight zoom on hover */
+    transform: scale(1.2);
   }
   
   .sidebar .nav-link.text-danger {
@@ -64,7 +64,7 @@
   }
   
   body.dark-mode .sidebar {
-    background-color: #181818; /* Darker background for dark mode */
+    background-color: #181818; 
     color: #fff;
   }
   

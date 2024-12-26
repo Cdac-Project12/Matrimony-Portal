@@ -1,9 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Layout from '../../components/Layout/Layout';
+import Modal from 'react-modal';
+
+Modal.setAppElement('#root'); // Accessibility improvement for React Modal
 
 const ViewProfile = () => {
   const { name } = useParams();
+  
+  // State for controlling the modal visibility and message
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [modalEmoji, setModalEmoji] = useState('');
 
   // Mock data for matches
   const matches = [
@@ -43,30 +51,78 @@ const ViewProfile = () => {
     return (
       <Layout>
         <div className="container-fluid p-4">
-          <h2>Profile not found</h2>
+          <h2 className="text-center text-danger">Profile not found</h2>
         </div>
       </Layout>
     );
   }
 
+  // Open modal with a message and emoji
+  const handleButtonClick = (action) => {
+    if (action === 'send') {
+      setModalMessage('Invitation message sent!');
+      setModalEmoji('😊'); // Happy emoji for sending message
+    } else if (action === 'report') {
+      setModalMessage('Profile has been reported!');
+      setModalEmoji('😞'); // Sad emoji for reporting profile
+    }
+    setIsModalOpen(true);
+  };
+
+  // Close modal
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <Layout>
       <div className="container-fluid p-4 text-center">
-        <img
-          src={match.img}
-          alt={match.name}
-          className="rounded-circle mb-3"
-          style={{ width: '200px', height: '200px', objectFit: 'cover' }}
-        />
-        <h1>{match.name}</h1>
-        <p className="text-muted">{match.bio}</p>
-        <div className="mt-4">
-          <p className="text-muted"><strong>Age:</strong> {match.age}</p>
-          <p className="text-muted"><strong>Height:</strong> {match.height}</p>
-          <p className="text-muted"><strong>Sex:</strong> {match.sex}</p>
-          <p className="text-muted"><strong>Education:</strong> {match.education}</p>
+        <div className="card shadow-lg p-4 rounded-lg">
+          <img
+            src={match.img}
+            alt={match.name}
+            className="rounded-circle mb-3 border border-5 border-light"
+            style={{ width: '200px', height: '200px', objectFit: 'cover' }}
+          />
+          <h1 className="display-4 text-dark font-weight-bold mb-3">{match.name}</h1>
+          <p className="text-muted lead">{match.bio}</p>
+          <div className="mt-4 text-left">
+            <p className="text-muted"><strong>Age:</strong> {match.age}</p>
+            <p className="text-muted"><strong>Height:</strong> {match.height}</p>
+            <p className="text-muted"><strong>Sex:</strong> {match.sex}</p>
+            <p className="text-muted"><strong>Education:</strong> {match.education}</p>
+          </div>
+          <div className="mt-4">
+            <button 
+              className="btn btn-primary btn-lg mx-2" 
+              onClick={() => handleButtonClick('send')}
+            >
+              Send Message
+            </button>
+            <button 
+              className="btn btn-danger btn-lg mx-2" 
+              onClick={() => handleButtonClick('report')}
+            >
+              Report Profile
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Modal for displaying the emoji and message */}
+      <Modal 
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Action Confirmation"
+        className="modal-content"
+        overlayClassName="modal-overlay"
+      >
+        <div className="text-center">
+          <h3 className="mb-3">{modalMessage}</h3>
+          <h1 className="emoji">{modalEmoji}</h1>
+          <button className="btn btn-secondary mt-3" onClick={closeModal}>Close</button>
+        </div>
+      </Modal>
     </Layout>
   );
 };

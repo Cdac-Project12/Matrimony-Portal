@@ -1,5 +1,11 @@
 .carousel-img {
-  object-fit: cover; /* Ensures images cover the area while maintaining aspect ratio */
-  height: 500px; /* Set a fixed height for the carousel images */
-  width: 100%; /* Ensures the images stretch to fill the width */
+  object-fit: cover;  
+  height: 500px;      
+  width: 100%;        
+}
+
+.card-img-top {
+  object-fit: cover;   
+  height: 200px;        
+  width: 100%;          
 }

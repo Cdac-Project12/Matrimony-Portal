@@ -3,6 +3,8 @@ import { NavLink } from 'react-router-dom';
 import './Sidebar.css'; // Include the updated CSS file
 
 const Sidebar = () => {
+  const messageCount = 3; // Placeholder for unread messages count (can be dynamic)
+
   return (
     <div className="sidebar d-flex flex-column bg-dark text-light p-4 shadow">
       <h3 className="text-center text-white mb-4">💍 Matrimony</h3>
@@ -27,7 +29,29 @@ const Sidebar = () => {
             <i className="fa fa-heart me-3 sidebar-icon text-danger"></i> Matches
           </NavLink>
         </li>
-       
+        <li>
+          <NavLink
+            to="/message"
+            className={({ isActive }) =>
+              `nav-link d-flex align-items-center ${isActive ? 'active' : ''}`
+            }
+          >
+            <i className="fa fa-envelope me-3 sidebar-icon text-info"></i> Messages
+            {messageCount > 0 && (
+              <span className="badge bg-danger ms-2">{messageCount}</span>
+            )}
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/profile"
+            className={({ isActive }) =>
+              `nav-link d-flex align-items-center ${isActive ? 'active' : ''}`
+            }
+          >
+            <i className="fa fa-user me-3 sidebar-icon text-primary"></i> Profile
+          </NavLink>
+        </li>
         <li>
           <NavLink
             to="/settings"
