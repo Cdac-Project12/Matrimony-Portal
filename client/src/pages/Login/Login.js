@@ -1,27 +1,22 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { setUser } from '../../redux/store';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../../redux/actions';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
   const dispatch = useDispatch();
-  const navigate = useNavigate(); 
+  const { loading, error, user } = useSelector((state) => state);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const demoUser = { name: 'Prabhas Raju', email, age: 29, bio: 'Love traveling and photography' };
-
-    dispatch(setUser(demoUser));
-
-    navigate('/dashboard');
+    dispatch(login(email, password)); // Dispatch login action
   };
 
   return (
     <div className="container d-flex justify-content-center align-items-center vh-100">
-      <div className="card p-4 shadow-lg" style={{ width: '400px' }}>
+      <div className="card shadow p-4" style={{ width: '400px' }}>
         <h2 className="text-center mb-4">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
@@ -30,7 +25,6 @@ const Login = () => {
               type="email"
               className="form-control"
               id="email"
-              placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -42,14 +36,20 @@ const Login = () => {
               type="password"
               className="form-control"
               id="password"
-              placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
-          <button type="submit" className="btn btn-primary w-100">Login</button>
+          <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+            {loading ? 'Logging In...' : 'Login'}
+          </button>
         </form>
+        {error && <p className="text-center text-danger mt-3">{error}</p>}
+        {user && <p className="text-center text-success mt-3">Welcome back, {user.firstName}!</p>}
+        <p className="text-center mt-3">
+          Don't have an account? <a href="/signup">Sign up here</a>
+        </p>
       </div>
     </div>
   );

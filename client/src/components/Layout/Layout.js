@@ -32,12 +32,10 @@ const Layout = ({ children }) => {
         height: '100vh'
       }}
     >
-      {/* Sidebar - Grid column 1 */}
       <div className="sidebar-container bg-light p-3 shadow" style={{ height: '100vh' }}>
         <Sidebar />
       </div>
 
-      {/* Main Content - Grid column 2 */}
       <div className="content-container" style={{ overflowY: 'auto' }}>
         <AnimatePresence mode="wait">
           <motion.div

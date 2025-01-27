@@ -3,17 +3,15 @@ import { useParams } from 'react-router-dom';
 import Layout from '../../components/Layout/Layout';
 import Modal from 'react-modal';
 
-Modal.setAppElement('#root'); // Accessibility improvement for React Modal
+Modal.setAppElement('#root'); 
 
 const ViewProfile = () => {
   const { name } = useParams();
   
-  // State for controlling the modal visibility and message
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [modalEmoji, setModalEmoji] = useState('');
 
-  // Mock data for matches
   const matches = [
     {
       name: 'Samantha Ruthprabhu',
@@ -44,7 +42,6 @@ const ViewProfile = () => {
     },
   ];
 
-  // Find the specific match based on the name parameter
   const match = matches.find((m) => m.name === name);
 
   if (!match) {
@@ -57,19 +54,17 @@ const ViewProfile = () => {
     );
   }
 
-  // Open modal with a message and emoji
   const handleButtonClick = (action) => {
     if (action === 'send') {
       setModalMessage('Invitation message sent!');
-      setModalEmoji('😊'); // Happy emoji for sending message
+      setModalEmoji('😊'); 
     } else if (action === 'report') {
       setModalMessage('Profile has been reported!');
-      setModalEmoji('😞'); // Sad emoji for reporting profile
+      setModalEmoji('😞');
     }
     setIsModalOpen(true);
   };
 
-  // Close modal
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -109,7 +104,6 @@ const ViewProfile = () => {
         </div>
       </div>
 
-      {/* Modal for displaying the emoji and message */}
       <Modal 
         isOpen={isModalOpen}
         onRequestClose={closeModal}

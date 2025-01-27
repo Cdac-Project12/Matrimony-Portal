@@ -1,5 +1,4 @@
-// animations.js
-// Centralized file for defining global animations.
+
 
 export const fadeIn = {
     hidden: { opacity: 0 },

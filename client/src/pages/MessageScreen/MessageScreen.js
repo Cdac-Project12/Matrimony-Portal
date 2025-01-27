@@ -3,9 +3,8 @@ import { useParams } from 'react-router-dom';
 import Layout from '../../components/Layout/Layout';
 
 const MessageScreen = () => {
-  const { id } = useParams(); // Gets the person ID from the route (e.g., /messages/:id)
+  const { id } = useParams(); 
 
-  // Example chat data for Samantha
   const person = {
     id: 1,
     name: 'Samantha Ruthprabhu',
@@ -45,7 +44,6 @@ const MessageScreen = () => {
           <h3>{person.name}</h3>
         </div>
 
-        {/* Chat Messages */}
         <div
           className="border rounded p-3 mb-3"
           style={{ height: '400px', overflowY: 'scroll', backgroundColor: '#f8f9fa' }}
@@ -67,7 +65,6 @@ const MessageScreen = () => {
           ))}
         </div>
 
-        {/* Input Field */}
         <div className="d-flex">
           <input
             type="text"

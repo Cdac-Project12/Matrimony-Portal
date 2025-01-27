@@ -61,7 +61,6 @@ const Dashboard = () => {
         <h1>Welcome, {user.name}</h1>
         <p>{user.bio}</p>
 
-        {/* Profile Completion Section */}
         <div className="mt-4">
           <h4>Profile Completion</h4>
           <div className="progress" style={{ height: '25px' }}>
@@ -71,7 +70,6 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Statistics Section */}
         <div className="row g-4 mt-5">
           {stats.map((stat, index) => (
             <div className="col-lg-3 col-md-6 col-sm-12" key={index}>
@@ -85,7 +83,6 @@ const Dashboard = () => {
           ))}
         </div>
 
-        {/* Actions Section */}
         <div className="row g-4 mt-5 justify-content-center">
           {actions.map((action, index) => (
             <div className="col-md-3 col-sm-6" key={index}>
@@ -101,7 +98,6 @@ const Dashboard = () => {
           ))}
         </div>
 
-        {/* Notifications Section */}
         <div className="mt-5">
           <h4>Recent Notifications</h4>
           <ul className="list-group">
@@ -114,7 +110,6 @@ const Dashboard = () => {
           </ul>
         </div>
 
-        {/* Top Matches Section */}
         <div className="mt-5">
           <h4>Top Matches</h4>
           <div className="row g-4">

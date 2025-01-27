@@ -4,7 +4,7 @@ import Layout from '../../components/Layout/Layout';
 const Profile = () => {
   const [user, setUser] = useState({
     name: 'Prabhas Raju',
-    email: 'prabhasraju@example.com',
+    email: 'prabhasraju@gmail.com',
     age: 28,
     gender: 'Male',
     bio: 'Marketing Specialist with a passion for photography and adventure.',
@@ -31,7 +31,7 @@ const Profile = () => {
   };
 
   const handleSaveClick = () => {
-    setUser(formData); // Update the user data
+    setUser(formData); 
     setIsEditing(false);
   };
 
@@ -40,7 +40,7 @@ const Profile = () => {
       <div className="container d-flex justify-content-center align-items-center vh-100">
         <div className="card shadow-lg" style={{ width: '24rem' }}>
           <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTzDhj_9Gm5QnqxifM2PR2FkOaYmwx543Isw&s"
+            src="https://i.pinimg.com/736x/7f/e7/cb/7fe7cb4ed3b692b581957a95f0f9774a.jpg"
             className="card-img-top rounded-circle mx-auto mt-4"
             alt="Profile"
             style={{ width: '150px' }}

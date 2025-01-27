@@ -1,9 +1,9 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import './Sidebar.css'; // Include the updated CSS file
+import './Sidebar.css'; 
 
 const Sidebar = () => {
-  const messageCount = 3; // Placeholder for unread messages count (can be dynamic)
+  const messageCount = 3; 
 
   return (
     <div className="sidebar d-flex flex-column bg-dark text-light p-4 shadow">
