@@ -1,21 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Layout from '../../components/Layout/Layout';
+import { updateUser, getUserDetails } from '../../redux/actions'; // Assuming these actions exist
 
 const Profile = () => {
-  const [user, setUser] = useState({
-    name: 'Prabhas Raju',
-    email: 'prabhasraju@gmail.com',
-    age: 28,
-    gender: 'Male',
-    bio: 'Marketing Specialist with a passion for photography and adventure.',
-    location: 'San Francisco, USA',
-    occupation: 'Marketing Specialist',
-    maritalStatus: 'Single',
-    hobbies: ['Photography', 'Hiking', 'Cooking'],
-  });
+  const user = useSelector((state) => state.user); // User data from Redux
+  const dispatch = useDispatch();
 
-  const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(user);
+  const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    if (!user) {
+      dispatch(getUserDetails()); // Fetch user details if not already available
+    } else {
+      setFormData(user); // Update form data whenever the user data in Redux changes
+    }
+  }, [user, dispatch]);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -31,8 +32,13 @@ const Profile = () => {
   };
 
   const handleSaveClick = () => {
-    setUser(formData); 
-    setIsEditing(false);
+    dispatch(updateUser(formData)); // Dispatch action to update user data
+    setIsEditing(false); // Close the modal after saving changes
+  };
+
+  // Helper function to display "Not available" if data is missing
+  const displayField = (field) => {
+    return field && field !== '' ? field : 'Not available';
   };
 
   return (
@@ -46,29 +52,32 @@ const Profile = () => {
             style={{ width: '150px' }}
           />
           <div className="card-body text-center">
-            <h3 className="card-title mb-3">{user.name}</h3>
-            <p className="text-muted">{user.bio}</p>
+            <h3 className="card-title mb-3">{displayField(user.name)}</h3>
+            <p className="text-muted">{displayField(user.bio)}</p>
             <ul className="list-group list-group-flush text-start">
               <li className="list-group-item">
-                <strong>Email:</strong> {user.email}
+                <strong>Email:</strong> {displayField(user.email)}
               </li>
               <li className="list-group-item">
-                <strong>Age:</strong> {user.age}
+                <strong>First Name:</strong> {displayField(user.firstName)}
               </li>
               <li className="list-group-item">
-                <strong>Gender:</strong> {user.gender}
+                <strong>Last Name:</strong> {displayField(user.lastName)}
               </li>
               <li className="list-group-item">
-                <strong>Location:</strong> {user.location}
+                <strong>Gender:</strong> {displayField(user.gender)}
               </li>
               <li className="list-group-item">
-                <strong>Occupation:</strong> {user.occupation}
+                <strong>Location:</strong> {displayField(user.location)}
               </li>
               <li className="list-group-item">
-                <strong>Marital Status:</strong> {user.maritalStatus}
+                <strong>Occupation:</strong> {displayField(user.occupation)}
               </li>
               <li className="list-group-item">
-                <strong>Hobbies:</strong> {user.hobbies.join(', ')}
+                <strong>Marital Status:</strong> {displayField(user.maritalStatus)}
+              </li>
+              <li className="list-group-item">
+                <strong>Hobbies:</strong> {user.hobbies && user.hobbies.length > 0 ? user.hobbies.join(', ') : 'Not available'}
               </li>
             </ul>
             <button

@@ -1,8 +1,7 @@
 import axios from 'axios';
-import { SET_USER, LOGOUT, SET_LOADING, SET_ERROR } from './actionTypes';
+import { SET_USER, LOGOUT, SET_LOADING, SET_ERROR, UPDATE_USER } from './actionTypes';
 
-// Define the base URL as a variable
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = 'http://localhost:8080'; // Your backend API URL
 
 // Action creators
 export const setUser = (user) => ({
@@ -25,50 +24,89 @@ export const setError = (error) => ({
 });
 
 // Thunk action for login
-export const login = (email, password) => async (dispatch) => {
-    dispatch(setLoading(true));
-  
-    try {
-      const response = await axios.post(`${BASE_URL}/user/login`, {
-        email,
-        password,
-      });
-  
-      if (response.data) {
-        dispatch(setUser(response.data)); // Store the user data in Redux after login
-  
-        // Redirect to the dashboard or home page after successful login
-        window.location.href = '/dashboard';
-      } else {
-        dispatch(setError('Login failed! Please check your credentials.'));
-      }
-    } catch (error) {
-      dispatch(setError('An error occurred during login.'));
-    } finally {
-      dispatch(setLoading(false));
-    }
-  };
-
-// Thunk action for register
-export const register = (firstName, lastName, email, password) => async (dispatch) => {
+export const login = (email, password, navigate) => async (dispatch) => {
   dispatch(setLoading(true));
 
   try {
-    const response = await axios.post(`${BASE_URL}/user/signup`, {
-      firstName,
-      lastName,
+    const response = await axios.post(`${BASE_URL}/user/login`, {
       email,
       password,
     });
-console.log(response.data)
+
     if (response.data) {
-      dispatch(setUser(response.data)); 
-      window.location.href = '/login';  
+      dispatch(setUser(response.data)); // Store user in Redux state
+      navigate('/dashboard'); // Navigate to the dashboard
+    } else {
+      dispatch(setError('Login failed! Invalid credentials.'));
+    }
+  } catch (error) {
+    dispatch(setError('An error occurred during login.'));
+  }
+};
+
+// Thunk action for registering a new user
+export const register = (userData) => async (dispatch) => {
+  dispatch(setLoading(true));
+  dispatch(setError(null)); // Clear any previous errors
+
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/user/signup`,
+      JSON.stringify(userData), // Convert the data to JSON string
+      {
+        headers: {
+          'Content-Type': 'application/json', // Explicitly set the content type
+        },
+      }
+    );
+
+    if (response.data) {
+      window.location.href = '/login'; // Redirect to login page
     } else {
       dispatch(setError('Registration failed! Please try again.'));
     }
   } catch (error) {
-    dispatch(setError('An error occurred during registration.'));
+    dispatch(setError(error.response?.data?.message || 'Registration failed due to a server issue.'));
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
+
+// Thunk action to get user details
+export const getUserDetails = (userId) => async (dispatch) => {
+  dispatch(setLoading(true));
+
+  try {
+    const response = await axios.get(`${BASE_URL}/user/details/${userId}`);
+
+    if (response.data) {
+      dispatch(setUser(response.data)); // Update the user in Redux state
+    } else {
+      dispatch(setError('Failed to fetch user details.'));
+    }
+  } catch (error) {
+    dispatch(setError('An error occurred while fetching user details.'));
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
+
+// Thunk action to update user details
+export const updateUser = (userData) => async (dispatch) => {
+  dispatch(setLoading(true));
+
+  try {
+    const response = await axios.put(`${BASE_URL}/user/update`, userData);
+
+    if (response.data) {
+      dispatch({
+        type: UPDATE_USER,
+        payload: response.data, // Update the user data in Redux store
+      });
+      return response.data; // Return updated user data
+    }
+  } catch (error) {
+    dispatch(setError('Failed to update user information.'));
   } finally {
     dispatch(setLoading(false));
   }

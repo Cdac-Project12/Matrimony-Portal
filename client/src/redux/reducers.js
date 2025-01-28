@@ -1,5 +1,4 @@
-// reducers.js
-import { SET_USER, LOGOUT, SET_LOADING, SET_ERROR } from './actionTypes';
+import { SET_USER, LOGOUT, SET_LOADING, SET_ERROR, UPDATE_USER } from './actionTypes';
 
 const initialState = {
   user: null,
@@ -7,20 +6,20 @@ const initialState = {
   error: null,
 };
 
-// Reducer to handle actions
-const rootReducer = (state = initialState, action) => {
+const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_USER:
-      return { ...state, user: action.payload, loading: false, error: null };
+      return { ...state, user: action.payload };
+    case UPDATE_USER:
+      return { ...state, user: action.payload }; // Update user after editing profile
     case LOGOUT:
       return { ...state, user: null };
     case SET_LOADING:
       return { ...state, loading: action.payload };
     case SET_ERROR:
-      return { ...state, error: action.payload, loading: false };
+      return { ...state, error: action.payload };
     default:
       return state;
   }
 };
-
-export default rootReducer;
+export default userReducer;
