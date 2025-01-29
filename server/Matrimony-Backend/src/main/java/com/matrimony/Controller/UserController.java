@@ -8,35 +8,49 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.matrimony.Dto.AuthRequest;
+import com.matrimony.Dto.UserRegisterDto;
 import com.matrimony.Entity.User;
 import com.matrimony.Service.UserService;
 
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
 	@Autowired
 	private UserService userService;
 	
-	@CrossOrigin(origins = "http://localhost:3000")
+
+	
+	@PostMapping("/login")
+	public ResponseEntity<?> userSignIn(@RequestBody 
+			AuthRequest dto) {
+		System.out.println("in user sign in " + dto);
+
+		return ResponseEntity.ok(userService.signIn(dto));
+
+	}
+	
+	
 	@PostMapping("/signup")
-	public ResponseEntity<User> SignUp(@RequestBody User user){
+	public ResponseEntity<?> SignUp(@RequestBody UserRegisterDto user){
 		System.out.println(user.getGender());
 		return ResponseEntity.ok(userService.addUser(user));
 	}
 	
-	 @CrossOrigin(origins = "http://localhost:3000")
-	    @PostMapping("/login")
-	    public ResponseEntity<?> login(@RequestBody User user) {
-	        ResponseEntity<?> response = userService.login(user);
+	 
+//	    @PostMapping("/login")
+//	    public ResponseEntity<?> login(@RequestBody User user) {
+//	        ResponseEntity<?> response = userService.login(user);
+//	        
+//	        // If login service provides response, return it directly
+//	        if (response.getStatusCode().is2xxSuccessful()) {
+//	            return response;
+//	        }
 	        
-	        // If login service provides response, return it directly
-	        if (response.getStatusCode().is2xxSuccessful()) {
-	            return response;
-	        }
-	        
-	        // Handle unsuccessful login explicitly
-	        return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
-	    }
+//	        // Handle unsuccessful login explicitly
+//	        return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
+//	    }
 }

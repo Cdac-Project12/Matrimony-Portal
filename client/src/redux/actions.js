@@ -34,6 +34,7 @@ export const login = (email, password, navigate) => async (dispatch) => {
     });
 
     if (response.data) {
+      console.log(response.data)
       dispatch(setUser(response.data)); // Store user in Redux state
       navigate('/dashboard'); // Navigate to the dashboard
     } else {
