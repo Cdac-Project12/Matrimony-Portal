@@ -20,10 +20,13 @@ import com.fasterxml.jackson.annotation.JsonValue;
 @AllArgsConstructor
 public class User {
 
+<<<<<<< HEAD
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+=======
+>>>>>>> Megha
     @NotBlank(message = "First name is mandatory")
     @Size(max = 255, message = "First name must be less than 255 characters")
     @Column(name = "first_name", nullable = false)
@@ -81,20 +84,30 @@ public class User {
     @Column(name = "education", length = 255)
     private String education;
 
-    @Column(name = "profession", length = 255)
-    private String profession;
+    @Column(name = "Profession", length = 255)
+    private String Profession;
 
     @Column(name = "annual_income", length = 50)
     private String annualIncome;
 
+<<<<<<< HEAD
     @Column(name = "hobbies", length = 500)  // Add hobbies field
     private String hobbies;  // Can store as a single string, or use JSON for a list
     
     @Column(name = "bio", length = 500) // Add bio field
     private String bio;  // Store a brief description or bio of the user
+=======
+    @Column(name = "age")
+    private int age;
+    
+    @Column(name = "location")
+    private String location;  // Define location field in User entity
+
+>>>>>>> Megha
 
     public enum Gender {
-        MALE, FEMALE, OTHER ;
+        MALE, FEMALE, OTHER;
+        
         @JsonCreator
         public static Gender forValue(String value) {
             return value != null ? Gender.valueOf(value.toUpperCase()) : null;
@@ -107,8 +120,9 @@ public class User {
     }
 
     public enum MaritalStatus {
-        SINGLE, MARRIED, DIVORCED, WIDOWED ;
-    	@JsonCreator
+        SINGLE, MARRIED, DIVORCED, WIDOWED;
+
+        @JsonCreator
         public static MaritalStatus forValue(String value) {
             return value != null ? MaritalStatus.valueOf(value.toUpperCase()) : null;
         }
