@@ -1,5 +1,0 @@
-package com.matrimony.DTO;
-
-public class UserProfileUpdateRequest {
-
-}
