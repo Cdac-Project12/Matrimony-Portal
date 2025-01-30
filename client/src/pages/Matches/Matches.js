@@ -161,12 +161,13 @@ const Matches = () => {
 
     const fetchMatches = async () => {
       try {
-        const response = await axios.post('http://localhost:8080/api/matches/find', {
+        const response = await axios.post('http://localhost:8080/users/matches/find', {
           age: user.age,
           caste: user.caste,
           religion: user.religion,
           gender: user.gender,
           profession: user.profession,
+          location: user.location, // ✅ Add location
         });
 
         setMatches(response.data);

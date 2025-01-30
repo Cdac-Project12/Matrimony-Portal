@@ -31,6 +31,11 @@ public class MatchController {
 	     public List<UserRegisterDto> getMatches(@RequestBody PreferencesDto preferencesDTO) {
 	         return matchService.getMatches(preferencesDTO);
 	     }
+	     
+	     @GetMapping("/{userId}")
+	     public List<UserRegisterDto> getMatches(@PathVariable Long userId) {
+	         return matchService.getMatchesByUserId(userId);
+	     }
 	 
 
   

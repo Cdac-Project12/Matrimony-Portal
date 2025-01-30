@@ -19,7 +19,7 @@ public interface MatchDao extends JpaRepository<User, Long> {
         @Param("caste") String caste,
         @Param("religion") String religion,
         @Param("gender") String gender,
-        @Param("profession") String Profession,
+        @Param("Profession") String Profession,
         @Param("location") String location
     );
 

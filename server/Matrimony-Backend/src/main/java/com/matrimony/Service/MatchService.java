@@ -10,6 +10,8 @@ public interface MatchService {
 
 	List<UserRegisterDto> getMatches(PreferencesDto preferencesDTO);
 
+	List<UserRegisterDto> getMatchesByUserId(Long userId);
+
 	 
 	
 	
