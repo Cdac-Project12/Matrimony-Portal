@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SET_USER, LOGOUT, SET_LOADING, SET_ERROR, UPDATE_USER } from './actionTypes';
+import { SET_USER, LOGOUT, SET_LOADING, SET_ERROR, UPDATE_USER, SAVE_PREFERENCES } from './actionTypes';
 
 const BASE_URL = 'http://localhost:8080'; // Your backend API URL
 
@@ -34,7 +34,6 @@ export const login = (email, password, navigate) => async (dispatch) => {
     });
 
     if (response.data) {
-      console.log(response.data)
       dispatch(setUser(response.data)); // Store user in Redux state
       navigate('/dashboard'); // Navigate to the dashboard
     } else {
@@ -108,6 +107,27 @@ export const updateUser = (userData) => async (dispatch) => {
     }
   } catch (error) {
     dispatch(setError('Failed to update user information.'));
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
+
+
+export const savePreferences = (userId, preferences) => async (dispatch) => {
+  dispatch(setLoading(true));
+console.log(preferences)
+  try {
+    // const token = localStorage.getItem('authToken');
+    const response = await axios.post(`${BASE_URL}/users/preferences/save/${userId}`, preferences);
+
+    if (response.data) {
+      dispatch({
+        type: SAVE_PREFERENCES,
+        payload: response.data,
+      });
+    }
+  } catch (error) {
+    dispatch(setError('Failed to save preferences.'));
   } finally {
     dispatch(setLoading(false));
   }

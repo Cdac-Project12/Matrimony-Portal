@@ -21,8 +21,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
 @ToString
 public class User extends BaseEntity {
 
-    
-
     @NotBlank(message = "First name is mandatory")
     @Size(max = 255, message = "First name must be less than 255 characters")
     @Column(name = "first_name", nullable = false)
@@ -79,14 +77,22 @@ public class User extends BaseEntity {
     @Column(name = "education", length = 255)
     private String education;
 
-    @Column(name = "profession", length = 255)
-    private String profession;
+    @Column(name = "Profession", length = 255)
+    private String Profession;
 
     @Column(name = "annual_income", length = 50)
     private String annualIncome;
 
+    @Column(name = "age")
+    private int age;
+    
+    @Column(name = "location")
+    private String location;  // Define location field in User entity
+
+
     public enum Gender {
-        MALE, FEMALE, OTHER ;
+        MALE, FEMALE, OTHER;
+        
         @JsonCreator
         public static Gender forValue(String value) {
             return value != null ? Gender.valueOf(value.toUpperCase()) : null;
@@ -99,8 +105,9 @@ public class User extends BaseEntity {
     }
 
     public enum MaritalStatus {
-        SINGLE, MARRIED, DIVORCED, WIDOWED ;
-    	@JsonCreator
+        SINGLE, MARRIED, DIVORCED, WIDOWED;
+
+        @JsonCreator
         public static MaritalStatus forValue(String value) {
             return value != null ? MaritalStatus.valueOf(value.toUpperCase()) : null;
         }

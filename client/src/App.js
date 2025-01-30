@@ -13,6 +13,11 @@ import { DarkModeProvider } from './components/Context/DarkModeContext';
 import Message from './pages/Mesage/Message';
 import MessageScreen from './pages/MessageScreen/MessageScreen';
 import ViewProfile from './pages/ViewProfile/ViewProfile';
+import SelectPreferences from './pages/SelectPreferences/SelectPreferences'; // Adjust this based on the actual relative path
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+
+
 
 
 
@@ -35,6 +40,9 @@ const App = () => {
         <Route path="/message" element={<Message />} />
         <Route path="/messages/:id" element={<MessageScreen />} />
         <Route path="/view-profile/:name" element={<ViewProfile />} />
+        
+        <Route path="/SelectPreferences" element={<SelectPreferences />} />
+
         
 
 
