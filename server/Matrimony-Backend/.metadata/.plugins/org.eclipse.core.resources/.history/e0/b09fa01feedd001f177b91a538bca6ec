@@ -1,0 +1,40 @@
+@Data
+public class UserProfileResponse {
+    private Long userId;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phone;
+    private String bio;
+    private String hobbies;
+    private String caste;
+    private String motherTongue;
+    private String education;
+    private String profession;
+    private String annualIncome;
+    private String address;
+    private String maritalStatus;
+    private String religion;
+    private String location;  // New field for location
+    private String occupation;  // New field for occupation
+
+    public UserProfileResponse(User user, UserProfile profile) {
+        this.userId = user.getId();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.email = user.getEmail();
+        this.phone = user.getPhone();
+        this.bio = profile.getBio();
+        this.hobbies = profile.getHobbies();
+        this.caste = profile.getCaste();
+        this.motherTongue = profile.getMotherTongue();
+        this.education = profile.getEducation();
+        this.profession = profile.getProfession();
+        this.annualIncome = profile.getAnnualIncome();
+        this.address = profile.getAddress();
+        this.maritalStatus = user.getMaritalStatus().toString();  // Converting enum to String
+        this.religion = user.getReligion();
+        this.location = profile.getLocation(); // Assuming location is in profile
+        this.occupation = profile.getOccupation(); // Assuming occupation is in profile
+    }
+}

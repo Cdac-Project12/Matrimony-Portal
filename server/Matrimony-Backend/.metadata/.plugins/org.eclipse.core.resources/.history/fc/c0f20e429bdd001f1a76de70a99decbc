@@ -1,0 +1,68 @@
+package com.matrimony.Service;
+
+import com.matrimony.Dao.UserDao;
+import com.matrimony.Dao.UserProfileDao;
+import com.matrimony.DTO.UserProfileResponse;
+import com.matrimony.DTO.UserProfileUpdateRequest;
+import com.matrimony.Entity.User;
+import com.matrimony.Entity.UserProfile;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+public class UserProfileService {
+
+    @Autowired
+    private UserDao userDao;
+
+    @Autowired
+    private UserProfileDao userProfileDao;
+
+    public User getUser(Long id) {
+        return userDao.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    public ResponseEntity<?> getUserProfile(Long userId) {
+        User user = getUser(userId);
+        Optional<UserProfile> profileOpt = userProfileDao.findByUserId(userId);
+
+        // If no profile exists, return user information without a profile
+        if (profileOpt.isEmpty()) {
+            return ResponseEntity.ok(user);
+        }
+
+        // Return user data along with profile data
+        UserProfile profile = profileOpt.get();
+        return ResponseEntity.ok(new UserProfileResponse(user, profile));
+    }
+
+    public ResponseEntity<?> updateUserProfile(Long userId, UserProfileUpdateRequest request) {
+        User user = getUser(userId);
+        Optional<UserProfile> profileOpt = userProfileDao.findByUserId(userId);
+
+        // Update the user entity
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setEmail(request.getEmail());
+        user.setPhone(request.getPhone());
+        userDao.save(user);
+
+        // Update the user profile entity, or create a new one if none exists
+        UserProfile profile = profileOpt.orElseGet(UserProfile::new);
+        profile.setUser(user);
+        profile.setBio(request.getBio());
+        profile.setHobbies(request.getHobbies());
+        profile.setCaste(request.getCaste());
+        profile.setMotherTongue(request.getMotherTongue());
+        profile.setEducation(request.getEducation());
+        profile.setProfession(request.getProfession());
+        profile.setAnnualIncome(request.getAnnualIncome());
+        profile.setAddress(request.getAddress());
+        userProfileDao.save(profile);
+
+        return ResponseEntity.ok("Profile updated successfully");
+    }
+}

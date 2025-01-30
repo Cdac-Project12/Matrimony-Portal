@@ -1,0 +1,22 @@
+package com.matrimony.DTO;
+
+import lombok.Data;
+
+@Data
+public class UserProfileUpdateRequest {
+    // Fields from User
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phone;
+
+    // Fields from UserProfile
+    private String bio;
+    private String hobbies;
+    private String caste;
+    private String motherTongue;
+    private String education;
+    private String profession;
+    private String annualIncome;
+    private String address;
+}

@@ -1,0 +1,23 @@
+package com.matrimony.Service;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.matrimony.Dao.UserProfileDao;
+import com.matrimony.Entity.UserProfile;
+
+@Service
+public class UserProfileService {
+    @Autowired
+    private UserProfileDao userProfileDao;
+
+    public UserProfile saveUserProfile(UserProfile userProfile) {
+        return userProfileDao.save(userProfile);
+    }
+
+    public Optional<UserProfile> findByUserId(Long userId) {
+        return userProfileDao.findByUserId(userId);
+    }
+}

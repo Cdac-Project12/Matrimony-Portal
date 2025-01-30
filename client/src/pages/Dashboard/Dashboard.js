@@ -58,7 +58,7 @@ const Dashboard = () => {
   return (
     <Layout>
       <div className="container-fluid p-4">
-        <h1>Welcome, {user.name}</h1>
+        <h1>Welcome, {user.firstName}</h1>
         <p>{user.bio}</p>
 
         <div className="mt-4">

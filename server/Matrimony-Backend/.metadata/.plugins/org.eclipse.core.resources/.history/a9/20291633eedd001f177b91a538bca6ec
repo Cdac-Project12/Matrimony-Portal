@@ -1,0 +1,60 @@
+package com.matrimony.Entity;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "UserProfile")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserProfile {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @Column(name = "caste", length = 50)
+    private String caste;
+
+    @Column(name = "mother_tongue", length = 50)
+    private String motherTongue;
+
+    @Column(name = "education", length = 255)
+    private String education;
+
+    @Column(name = "profession", length = 255)
+    private String profession;
+
+    @Column(name = "annual_income", length = 50)
+    private String annualIncome;
+
+    @Lob
+    @Column(name = "profile_picture")
+    private byte[] profilePicture;
+
+    @Column(name = "bio", columnDefinition = "TEXT")
+    private String bio;
+
+    @Column(name = "hobbies", columnDefinition = "TEXT")
+    private String hobbies;
+
+    @Column(name = "address", columnDefinition = "TEXT")
+    private String address;
+
+    // New fields
+    @Column(name = "location", length = 255)
+    private String location;
+
+    @Column(name = "occupation", length = 255)
+    private String occupation;
+}

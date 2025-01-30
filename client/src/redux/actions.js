@@ -34,8 +34,16 @@ export const login = (email, password, navigate) => async (dispatch) => {
     });
 
     if (response.data) {
-      dispatch(setUser(response.data)); // Store user in Redux state
-      navigate('/dashboard'); // Navigate to the dashboard
+      const { user, token } = response.data;
+
+      // Store the token in localStorage
+      localStorage.setItem('token', token);
+
+      // Store the user in Redux state
+      dispatch(setUser(user));
+
+      // Navigate to the dashboard
+      navigate('/dashboard');
     } else {
       dispatch(setError('Login failed! Invalid credentials.'));
     }
@@ -47,21 +55,21 @@ export const login = (email, password, navigate) => async (dispatch) => {
 // Thunk action for registering a new user
 export const register = (userData) => async (dispatch) => {
   dispatch(setLoading(true));
-  dispatch(setError(null)); // Clear any previous errors
+  dispatch(setError(null));
 
   try {
     const response = await axios.post(
       `${BASE_URL}/user/signup`,
-      JSON.stringify(userData), // Convert the data to JSON string
+      JSON.stringify(userData),
       {
         headers: {
-          'Content-Type': 'application/json', // Explicitly set the content type
+          'Content-Type': 'application/json',
         },
       }
     );
 
     if (response.data) {
-      window.location.href = '/login'; // Redirect to login page
+      window.location.href = '/login'; 
     } else {
       dispatch(setError('Registration failed! Please try again.'));
     }
@@ -72,41 +80,31 @@ export const register = (userData) => async (dispatch) => {
   }
 };
 
-// Thunk action to get user details
-export const getUserDetails = (userId) => async (dispatch) => {
-  dispatch(setLoading(true));
-
-  try {
-    const response = await axios.get(`${BASE_URL}/user/details/${userId}`);
-
-    if (response.data) {
-      dispatch(setUser(response.data)); // Update the user in Redux state
-    } else {
-      dispatch(setError('Failed to fetch user details.'));
-    }
-  } catch (error) {
-    dispatch(setError('An error occurred while fetching user details.'));
-  } finally {
-    dispatch(setLoading(false));
-  }
-};
-
 // Thunk action to update user details
 export const updateUser = (userData) => async (dispatch) => {
   dispatch(setLoading(true));
-
+  const userId = userData.id;
+  console.log(userId)
   try {
-    const response = await axios.put(`${BASE_URL}/user/update`, userData);
+    const token = localStorage.getItem('token');
+    console.log(token)
+    const response = await axios.put(
+      `${BASE_URL}/user/update/${userId}`,
+      userData
+      
+    );
 
     if (response.data) {
       dispatch({
         type: UPDATE_USER,
-        payload: response.data, // Update the user data in Redux store
+        payload: response.data,
       });
-      return response.data; // Return updated user data
+      return response.data;
+    } else {
+      dispatch(setError('Failed to update user information.'));
     }
   } catch (error) {
-    dispatch(setError('Failed to update user information.'));
+    dispatch(setError(error.response?.data?.message || 'Failed to update user information.'));
   } finally {
     dispatch(setLoading(false));
   }

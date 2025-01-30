@@ -1,42 +1,50 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Layout from '../../components/Layout/Layout';
-import { updateUser, getUserDetails } from '../../redux/actions'; // Assuming these actions exist
+import { updateUser } from '../../redux/actions';
 
 const Profile = () => {
-  const user = useSelector((state) => state.user); // User data from Redux
+  const user = useSelector((state) => state.user); // Get user data from Redux store
   const dispatch = useDispatch();
 
-  const [formData, setFormData] = useState(user);
+  const [formData, setFormData] = useState({});
   const [isEditing, setIsEditing] = useState(false);
 
+  // Fetch user details when the component mounts
   useEffect(() => {
-    if (!user) {
-      dispatch(getUserDetails()); // Fetch user details if not already available
-    } else {
-      setFormData(user); // Update form data whenever the user data in Redux changes
+    if (user && user.id) {
+      setFormData({ ...user }); // Populate formData with user data when it is available
     }
-  }, [user, dispatch]);
+  }, [user]);
 
+  // Handle changes in input fields
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value, // Update the correct field in the state
+    }));
+  };
+
+  // Handle click on edit button
   const handleEditClick = () => {
     setIsEditing(true);
   };
 
+  // Handle click on cancel button in the modal
   const handleCloseClick = () => {
     setIsEditing(false);
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
+  // Save the updated data
   const handleSaveClick = () => {
-    dispatch(updateUser(formData)); // Dispatch action to update user data
-    setIsEditing(false); // Close the modal after saving changes
+    if (formData.id) {
+      dispatch(updateUser(formData)); // Dispatch action to update user data in Redux and backend
+    }
+    setIsEditing(false); // Close the modal after saving
   };
 
-  // Helper function to display "Not available" if data is missing
+  // Display user data if it exists, otherwise show "Not available"
   const displayField = (field) => {
     return field && field !== '' ? field : 'Not available';
   };
@@ -52,7 +60,7 @@ const Profile = () => {
             style={{ width: '150px' }}
           />
           <div className="card-body text-center">
-            <h3 className="card-title mb-3">{displayField(user.name)}</h3>
+            <h3 className="card-title mb-3">{displayField(user.firstName)}</h3>
             <p className="text-muted">{displayField(user.bio)}</p>
             <ul className="list-group list-group-flush text-start">
               <li className="list-group-item">
@@ -68,16 +76,16 @@ const Profile = () => {
                 <strong>Gender:</strong> {displayField(user.gender)}
               </li>
               <li className="list-group-item">
-                <strong>Location:</strong> {displayField(user.location)}
+                <strong>Address:</strong> {displayField(user.address)}
               </li>
               <li className="list-group-item">
-                <strong>Occupation:</strong> {displayField(user.occupation)}
+                <strong>Profession:</strong> {displayField(user.profession)}
               </li>
               <li className="list-group-item">
                 <strong>Marital Status:</strong> {displayField(user.maritalStatus)}
               </li>
               <li className="list-group-item">
-                <strong>Hobbies:</strong> {user.hobbies && user.hobbies.length > 0 ? user.hobbies.join(', ') : 'Not available'}
+                <strong>Hobbies:</strong> {user.hobbies ? user.hobbies.split(',').join(', ') : 'Not available'}
               </li>
             </ul>
             <button
@@ -111,7 +119,7 @@ const Profile = () => {
               </div>
               <div className="modal-body">
                 <form>
-                  {Object.keys(formData).map((key) => (
+                  {Object.keys(formData).filter(key => key !== 'id').map((key) => (
                     <div className="mb-3" key={key}>
                       <label
                         className="form-label fw-bold"
@@ -121,12 +129,11 @@ const Profile = () => {
                       </label>
                       <input
                         type="text"
-                        className="form-control shadow-sm"
+                        className="form-control"
                         id={key}
                         name={key}
-                        value={formData[key]}
+                        value={formData[key] || ''}
                         onChange={handleInputChange}
-                        placeholder={`Enter your ${key}`}
                       />
                     </div>
                   ))}

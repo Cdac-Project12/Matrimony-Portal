@@ -1,0 +1,74 @@
+package com.matrimony.Controller;
+
+import java.io.IOException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import com.matrimony.DTO.UserProfileUpdateRequest;
+import com.matrimony.Entity.User;
+import com.matrimony.Service.UserService;
+import com.matrimony.Service.UserProfileService;
+
+@RestController
+@RequestMapping("/user")
+public class UserController {
+
+    @Autowired
+    private UserService userService;
+    
+    @Autowired
+    private UserProfileService userProfileService;
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/signup")
+    public ResponseEntity<User> signUp(@RequestBody User user) {
+        try {
+            User savedUser = userService.addUser(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody User loginRequest) {
+        try {
+            ResponseEntity<?> response = userService.login(loginRequest);
+            return response;
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials.");
+        }
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUser(
+            @PathVariable Long id,
+            @RequestParam(value = "profilePicture", required = false) MultipartFile profilePicture,
+            @RequestBody User user) {
+        try {
+            User updatedUser = userService.updateUser(id, user, profilePicture);
+            return ResponseEntity.ok(updatedUser);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("/{userId}/profile")
+    public ResponseEntity<?> getUserProfile(@PathVariable Long userId) {
+        return userProfileService.getUserProfile(userId);
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PutMapping("/{userId}/profile")
+    public ResponseEntity<?> updateUserProfile(@PathVariable Long userId, @RequestBody UserProfileUpdateRequest request) {
+        return userProfileService.updateUserProfile(userId, request);
+    }
+}

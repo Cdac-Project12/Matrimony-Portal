@@ -1,0 +1,65 @@
+package com.matrimony.Service;
+
+import com.matrimony.Dao.UserDao;
+import com.matrimony.Entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import java.util.Optional;
+
+@Service
+public class UserService {
+
+    @Autowired
+    private UserDao userDao;
+
+    public User addUser(User user) {
+        return userDao.save(user);
+    }
+
+    public ResponseEntity<?> login(User loginRequest) {
+        Optional<User> userOpt = userDao.findByEmail(loginRequest.getEmail());
+
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("User not found.");
+        }
+
+        User user = userOpt.get();
+        if (!loginRequest.getPassword().equals(user.getPassword())) {
+            return ResponseEntity.badRequest().body("Invalid credentials.");
+        }
+
+        return ResponseEntity.ok(user);
+    }
+
+    public ResponseEntity<?> updateUser(Long userId, User updatedUser) {
+        Optional<User> existingUserOpt = userDao.findById(userId);
+
+        if (existingUserOpt.isEmpty()) {
+            return ResponseEntity.status(404).body("User not found");
+        }
+
+        User existingUser = existingUserOpt.get();
+        
+        // Update user details
+        existingUser.setFirstName(updatedUser.getFirstName());
+        existingUser.setLastName(updatedUser.getLastName());
+        existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setPhone(updatedUser.getPhone());
+        existingUser.setAddress(updatedUser.getAddress());
+        existingUser.setProfilePicture(updatedUser.getProfilePicture());
+        existingUser.setMaritalStatus(updatedUser.getMaritalStatus());
+        existingUser.setReligion(updatedUser.getReligion());
+        existingUser.setCaste(updatedUser.getCaste());
+        existingUser.setMotherTongue(updatedUser.getMotherTongue());
+        existingUser.setEducation(updatedUser.getEducation());
+        existingUser.setProfession(updatedUser.getProfession());
+        existingUser.setAnnualIncome(updatedUser.getAnnualIncome());
+        existingUser.setBio(updatedUser.getBio());
+        existingUser.setHobbies(updatedUser.getHobbies());
+
+        userDao.save(existingUser);
+
+        return ResponseEntity.ok(existingUser);
+    }
+}
