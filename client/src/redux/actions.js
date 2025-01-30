@@ -116,7 +116,7 @@ export const savePreferences = (userId, preferences) => async (dispatch) => {
 console.log(preferences)
   try {
     // const token = localStorage.getItem('authToken');
-    const response = await axios.post(`${BASE_URL}/users/preferences/save/${userId}`, preferences);
+    const response = await axios.post(`${BASE_URL}/user/preferences/save/${userId}`, preferences);
 
     if (response.data) {
       dispatch({

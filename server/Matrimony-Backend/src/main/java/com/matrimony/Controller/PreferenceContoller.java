@@ -15,7 +15,7 @@ import com.matrimony.Entity.Preferences;
 import com.matrimony.Service.PreferenceService;
 
 @RestController
-@RequestMapping("/users/preferences")
+@RequestMapping("/user/preferences")
 @CrossOrigin(origins = "http://localhost:3000")
 public class PreferenceContoller {
 	@Autowired

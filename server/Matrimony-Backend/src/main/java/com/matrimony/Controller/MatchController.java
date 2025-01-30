@@ -17,7 +17,7 @@ import com.matrimony.Entity.User;
 import com.matrimony.Service.MatchService;
 
 @RestController
-@RequestMapping("/users/matches")
+@RequestMapping("/user/matches")
 @CrossOrigin(origins = "http://localhost:3000")
 public class MatchController {
 	 @Autowired

@@ -20,13 +20,11 @@ import com.fasterxml.jackson.annotation.JsonValue;
 @AllArgsConstructor
 public class User {
 
-<<<<<<< HEAD
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-=======
->>>>>>> Megha
+
     @NotBlank(message = "First name is mandatory")
     @Size(max = 255, message = "First name must be less than 255 characters")
     @Column(name = "first_name", nullable = false)
@@ -90,20 +88,19 @@ public class User {
     @Column(name = "annual_income", length = 50)
     private String annualIncome;
 
-<<<<<<< HEAD
+
     @Column(name = "hobbies", length = 500)  // Add hobbies field
     private String hobbies;  // Can store as a single string, or use JSON for a list
     
     @Column(name = "bio", length = 500) // Add bio field
     private String bio;  // Store a brief description or bio of the user
-=======
+  
     @Column(name = "age")
     private int age;
     
     @Column(name = "location")
     private String location;  // Define location field in User entity
 
->>>>>>> Megha
 
     public enum Gender {
         MALE, FEMALE, OTHER;

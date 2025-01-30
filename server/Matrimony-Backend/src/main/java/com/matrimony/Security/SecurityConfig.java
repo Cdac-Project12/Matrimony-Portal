@@ -17,7 +17,7 @@ public class SecurityConfig {
             .cors().and() // Enable CORS support
             .csrf().disable() // Disable CSRF for simplicity (adjust if needed)
             .authorizeRequests(auth -> auth
-                .requestMatchers("/user/signup", "/user/login", "/user/update/*").permitAll() // Allow signup and login without authentication
+                .requestMatchers("/user/signup", "/user/login", "/user/update/*","/user/preferences/save/*").permitAll() // Allow signup and login without authentication
                 .anyRequest().authenticated() // All other routes require authentication
             );
 
