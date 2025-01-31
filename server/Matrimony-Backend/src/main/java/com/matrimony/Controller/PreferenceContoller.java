@@ -32,13 +32,13 @@ public class PreferenceContoller {
 	        return ResponseEntity.ok(savedPreferences);
 	    }
 	 
-	 
-	 @GetMapping("/matches/{userId}")
-	    public ResponseEntity<?> getMatchingUsers(@PathVariable Long userId) {
-	        List<UserRegisterDto> matchingUsers = preferenceService.findMatchingUsers(userId);
-	        return ResponseEntity.ok(matchingUsers);
-	    }
-	
-	
+//	 
+//	 @GetMapping("/matches/{userId}")
+//	    public ResponseEntity<?> getMatchingUsers(@PathVariable Long userId) {
+//	        List<UserRegisterDto> matchingUsers = preferenceService.findMatchingUsers(userId);
+//	        return ResponseEntity.ok(matchingUsers);
+//	    }
+//	
+//	
 
 }

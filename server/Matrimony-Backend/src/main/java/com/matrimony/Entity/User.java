@@ -82,8 +82,8 @@ public class User {
     @Column(name = "education", length = 255)
     private String education;
 
-    @Column(name = "Profession", length = 255)
-    private String Profession;
+    @Column(name = "profession", length = 255)
+    private String profession;
 
     @Column(name = "annual_income", length = 50)
     private String annualIncome;

@@ -8,11 +8,11 @@ import lombok.Setter;
 public class PreferencesDto extends BaseDto{
 	
 	private int age;
-	private String Location;
-	private String Religion;
-	private String Caste;
-	private String Education;
-	private String Profession;
-	private String Gender;
+	private String location;
+	private String religion;
+	private String caste;
+	private String education;
+	private String profession;
+	private String gender;
 
 }

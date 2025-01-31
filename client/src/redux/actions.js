@@ -129,4 +129,15 @@ console.log(preferences)
   } finally {
     dispatch(setLoading(false));
   }
+
+
+
+  try {
+    // const token = localStorage.getItem('authToken');
+    const response = await axios.post(`${BASE_URL}/user/matches/find/${userId}`);
+    console.log(response.data)
+   
+  } catch (error) {
+   console.log("Error")
+  } 
 };

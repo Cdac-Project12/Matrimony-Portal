@@ -97,21 +97,21 @@ const SelectPreferences = () => {
               <input
                 type="radio"
                 name="gender"
-                value="Male"
-                checked={preferences.gender === "Male"}
+                value="MALE"
+                checked={preferences.gender === "MALE"}
                 onChange={handleChange}
               />{" "}
-              Male
+              MALE
             </label>
             <label className="ms-3">
               <input
                 type="radio"
                 name="gender"
-                value="Female"
-                checked={preferences.gender === "Female"}
+                value="FEMALE"
+                checked={preferences.gender === "FEMALE"}
                 onChange={handleChange}
               />{" "}
-              Female
+              FEMALE
             </label>
           </div>
         </div>

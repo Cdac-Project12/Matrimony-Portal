@@ -12,14 +12,14 @@ public interface MatchDao extends JpaRepository<User, Long> {
            "AND u.caste = :caste " +
            "AND u.religion = :religion " +  // Use camelCase for field names
            "AND u.gender = :gender " +
-           "AND u.Profession  = :Profession " +
+           "AND u.profession  = :profession " +
            "AND u.location = :location")   // Fix field name case
     List<User> findMatchesByPreferences(
         @Param("age") int age,              // Match the query parameter name
         @Param("caste") String caste,
         @Param("religion") String religion,
         @Param("gender") String gender,
-        @Param("Profession") String Profession,
+        @Param("profession") String profession,
         @Param("location") String location
     );
 

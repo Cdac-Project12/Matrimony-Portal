@@ -12,6 +12,6 @@ public interface PreferenceService {
 
 	Preferences savePreferences(PreferencesDto preferencesDTO, Long id);
 
-	List<UserRegisterDto> findMatchingUsers(Long userId);
+//	List<UserRegisterDto> findMatchingUsers(Long userId);
 
 }

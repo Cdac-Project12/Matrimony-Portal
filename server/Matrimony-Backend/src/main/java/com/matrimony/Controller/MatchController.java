@@ -27,16 +27,16 @@ public class MatchController {
 	
 
 	     // Endpoint to get matches based on PreferencesDTO
-	     @PostMapping("/find")
-	     public List<UserRegisterDto> getMatches(@RequestBody PreferencesDto preferencesDTO) {
-	         return matchService.getMatches(preferencesDTO);
+	     @PostMapping("/find/{Id}")
+	     public List<UserRegisterDto> getMatches(@PathVariable Long Id) {
+	         return matchService.getMatches(Id);
 	     }
 	     
-	     @GetMapping("/{userId}")
-	     public List<UserRegisterDto> getMatches(@PathVariable Long userId) {
-	         return matchService.getMatchesByUserId(userId);
-	     }
-	 
+//	     @GetMapping("/{userId}")
+//	     public List<UserRegisterDto> getMatches(@PathVariable Long userId) {
+//	         return matchService.getMatchesByUserId(userId);
+//	     }
+//	 
 
   
 
