@@ -17,16 +17,19 @@ import lombok.ToString;
 public class Preferences extends BaseEntity {
 	
 	private int age;
-	private String Location;
-	private String Religion;
-	private String Caste;
-	private String Education;
-	private String Profession;
-	private String Gender;
+	private String location;
+	private String religion;
+	private String caste;
+	private String education;
+	private String profession;
+	private String gender;
 	
 
 	@OneToOne
 	@JoinColumn(name = "user_id", nullable = false)
-	private User user; 
+	private User user;
+
+
+
 
 }

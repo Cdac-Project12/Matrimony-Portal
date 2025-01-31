@@ -1,5 +1,8 @@
 package com.matrimony.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +43,41 @@ public class PreferenceServiceImpl implements PreferenceService {
 
         return preferenceDao.save(preferences);
     }
+	
+	
+	@Override
+	public List<UserRegisterDto> findMatchingUsers(Long userId) {
+	    Preferences preferences = preferenceDao.findByUserId(userId);
+	    if (preferences == null) {
+	        throw new RuntimeException("Preferences not found for user");
+	    }
+
+	    List<Preferences> matchingPreferences = preferenceDao.findByAgeAndLocationAndReligionAndCasteAndEducationAndProfessionAndGender(
+	            preferences.getAge(),
+	            preferences.getLocation(),
+	            preferences.getReligion(),
+	            preferences.getCaste(),
+	            preferences.getEducation(),
+	            preferences.getProfession(),
+	            preferences.getGender()
+	    );
+
+	    return matchingPreferences.stream()
+	            .map(pref -> {
+	                User user = pref.getUser();
+	                UserRegisterDto userDto = new UserRegisterDto();
+	                userDto.setId(user.getId());
+	                userDto.setFirstName(user.getFirstName());
+	                userDto.setLastName(user.getLastName());
+	                userDto.setAge(user.getAge());
+	                userDto.setLocation(user.getAddress());
+	                userDto.setProfession(user.getProfession());
+	                return userDto;
+	            })
+	            .collect(Collectors.toList());
 	}
+}
+
 	
 
 

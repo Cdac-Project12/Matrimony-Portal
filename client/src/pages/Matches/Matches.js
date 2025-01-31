@@ -144,7 +144,6 @@
 
 
 
-
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom';
@@ -152,33 +151,38 @@ import axios from 'axios';
 import Layout from '../../components/Layout/Layout';
 
 const Matches = () => {
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user); // User data from Redux store
   const navigate = useNavigate();
-  const [matches, setMatches] = useState([]);
+  const [matches, setMatches] = useState([]); // State to store the matches
 
   useEffect(() => {
+    // If user data is not available, exit the effect early
     if (!user) return;
 
+    // Function to fetch matching users based on preferences
     const fetchMatches = async () => {
       try {
+        // Send user preferences to the backend to get matching profiles
         const response = await axios.post('http://localhost:8080/users/matches/find', {
           age: user.age,
           caste: user.caste,
           religion: user.religion,
           gender: user.gender,
           profession: user.profession,
-          location: user.location, // ✅ Add location
+          location: user.location, // Ensure location is part of user preferences
+          education: user.education, // If education is part of preferences
         });
 
-        setMatches(response.data);
+        setMatches(response.data); // Set the response data (matches) to state
       } catch (error) {
-        console.error('Error fetching matches:', error);
+        console.error('Error fetching matches:', error); // Log any error that occurs during the API call
       }
     };
 
-    fetchMatches();
-  }, [user]); // ✅ Depend only on `user`
+    fetchMatches(); // Call fetchMatches when user data is available
+  }, [user]); // Depend on user data to re-fetch matches when user preferences change
 
+  // If user is not logged in, redirect to login page
   if (!user) {
     return <Navigate to="/login" />;
   }
@@ -224,5 +228,6 @@ const Matches = () => {
 };
 
 export default Matches;
+
 
 
