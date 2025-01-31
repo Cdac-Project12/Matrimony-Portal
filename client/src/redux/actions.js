@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SET_USER, LOGOUT, SET_LOADING, SET_ERROR, UPDATE_USER, SAVE_PREFERENCES } from './actionTypes';
+import { SET_USER, LOGOUT, SET_LOADING, SET_ERROR, UPDATE_USER, SAVE_PREFERENCES, SET_MATCHES } from './actionTypes';
 
 const BASE_URL = 'http://localhost:8080'; // Your backend API URL
 
@@ -23,6 +23,10 @@ export const setError = (error) => ({
   payload: error,
 });
 
+export const setMatches = (matches) => ({
+  type: SET_MATCHES,
+  payload: matches,
+});
 // Thunk action for login
 export const login = (email, password, navigate) => async (dispatch) => {
   dispatch(setLoading(true));
@@ -69,7 +73,7 @@ export const register = (userData) => async (dispatch) => {
     );
 
     if (response.data) {
-      window.location.href = '/login'; 
+      window.location.href = '/login';
     } else {
       dispatch(setError('Registration failed! Please try again.'));
     }
@@ -91,7 +95,6 @@ export const updateUser = (userData) => async (dispatch) => {
     const response = await axios.put(
       `${BASE_URL}/user/update/${userId}`,
       userData
-      
     );
 
     if (response.data) {
@@ -110,12 +113,12 @@ export const updateUser = (userData) => async (dispatch) => {
   }
 };
 
-
+// Save user preferences
 export const savePreferences = (userId, preferences) => async (dispatch) => {
   dispatch(setLoading(true));
-console.log(preferences)
+  console.log(preferences);
+  
   try {
-    // const token = localStorage.getItem('authToken');
     const response = await axios.post(`${BASE_URL}/user/preferences/save/${userId}`, preferences);
 
     if (response.data) {
@@ -129,15 +132,22 @@ console.log(preferences)
   } finally {
     dispatch(setLoading(false));
   }
+};
 
-
+// Fetch matches
+export const fetchMatches = (userId) => async (dispatch) => {
+  dispatch(setLoading(true));
 
   try {
-    // const token = localStorage.getItem('authToken');
     const response = await axios.post(`${BASE_URL}/user/matches/find/${userId}`);
     console.log(response.data)
-   
+    dispatch(setMatches(response.data));
   } catch (error) {
-   console.log("Error")
-  } 
+    dispatch(setError('Error fetching matches. Please try again later.'));
+  } finally {
+    dispatch(setLoading(false));
+  }
 };
+
+// Action to set matches in state
+
