@@ -12,6 +12,15 @@ const Matches = () => {
   const dispatch = useDispatch(); // To dispatch actions
   const navigate = useNavigate();
 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredMatches, setFilteredMatches] = useState(matches || []);
+  const [filters, setFilters] = useState({
+    age: '',
+    caste: '',
+    religion: '',
+    profession: '',
+  });
+
   useEffect(() => {
     // If user data is available, fetch matches based on user preferences
     if (user) {
@@ -19,22 +28,112 @@ const Matches = () => {
     }
   }, [user, dispatch]); // Dependency on user, re-fetch matches if user changes
 
+  useEffect(() => {
+    setFilteredMatches(matches);
+  }, [matches]);
+
   // If user is not logged in, redirect to login page
   if (!user) {
     return <Navigate to="/login" />;
   }
 
+  // Handle Search
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+    filterMatches(event.target.value, filters);
+  };
+
+  // Handle Filter Change
+  const handleFilterChange = (event) => {
+    const { name, value } = event.target;
+    const updatedFilters = { ...filters, [name]: value };
+    setFilters(updatedFilters);
+    filterMatches(searchTerm, updatedFilters);
+  };
+
+  // Filter Matches Based on Search & Filters
+  const filterMatches = (search, appliedFilters) => {
+    let results = matches;
+
+    if (search) {
+      results = results.filter((match) =>
+        match.firstName.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    Object.keys(appliedFilters).forEach((key) => {
+      if (appliedFilters[key]) {
+        results = results.filter((match) => match[key] === appliedFilters[key]);
+      }
+    });
+
+    setFilteredMatches(results);
+  };
+
   return (
     <Layout>
       <div className="container-fluid p-4">
         <h1>Matches</h1>
-        {loading ? (
-          <p>Loading matches...</p>
-        ) : error ? (
-          <p className="text-danger">{error}</p>
-        ) : matches && matches.length > 0 ? (
-          <div className="row g-4">
-            {matches.map((match, index) => (
+        
+        {/* Search Bar */}
+        <input
+          type="text"
+          className="form-control mb-3"
+          placeholder="Search by name..."
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+
+        {/* Filters */}
+        <div className="row mb-4">
+          <div className="col-md-3">
+            <select className="form-select" name="age" onChange={handleFilterChange}>
+              <option value="">Filter by Age</option>
+              <option value="18-25">18-25</option>
+              <option value="26-35">26-35</option>
+              <option value="36-45">36-45</option>
+              <option value="46-60">46-60</option>
+            </select>
+          </div>
+          <div className="col-md-3">
+            <select className="form-select" name="caste" onChange={handleFilterChange}>
+              <option value="">Filter by Caste</option>
+              <option value="General">General</option>
+              <option value="OBC">OBC</option>
+              <option value="SC">SC</option>
+              <option value="ST">ST</option>
+            </select>
+          </div>
+          <div className="col-md-3">
+            <select className="form-select" name="religion" onChange={handleFilterChange}>
+              <option value="">Filter by Religion</option>
+              <option value="Hindu">Hindu</option>
+              <option value="Muslim">Muslim</option>
+              <option value="Christian">Christian</option>
+              <option value="Sikh">Sikh</option>
+            </select>
+          </div>
+          <div className="col-md-3">
+            <select className="form-select" name="profession" onChange={handleFilterChange}>
+              <option value="">Filter by Profession</option>
+              <option value="Engineer">Engineer</option>
+              <option value="Doctor">Doctor</option>
+              <option value="Teacher">Teacher</option>
+              <option value="Artist">Artist</option>
+              <option value="Lawyer">Lawyer</option>
+              <option value="Entrepreneur">Entrepreneur</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Display Matches */}
+        <div className="row g-4">
+          {loading ? (
+            <p>Loading matches...</p>
+          ) : error ? (
+            <p className="text-danger">{error}</p>
+          ) : filteredMatches.length > 0 ? (
+            filteredMatches.map((match, index) => (
               <div className="col-lg-4 col-md-6 col-sm-12" key={index}>
                 <div className="card shadow-lg border-0 h-100">
                   <div className="card-body text-center">
@@ -57,11 +156,11 @@ const Matches = () => {
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-        ) : (
-          <p>No matches found.</p>
-        )}
+            ))
+          ) : (
+            <p>No matches found.</p>
+          )}
+        </div>
       </div>
     </Layout>
   );
