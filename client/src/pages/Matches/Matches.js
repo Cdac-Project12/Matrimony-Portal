@@ -13,27 +13,22 @@ const Matches = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // State to store profile images and search/filter state
+  const [profileImages, setProfileImages] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredMatches, setFilteredMatches] = useState(matches || []);
   const [filters, setFilters] = useState({
     age: '',
     caste: '',
     religion: '',
-    profession: '',
+    profession: ''
   });
-
-  // State to store profile images
-  const [profileImages, setProfileImages] = useState({});
+  const [filteredMatches, setFilteredMatches] = useState(matches);
 
   useEffect(() => {
     if (user) {
       dispatch(fetchMatches(user.id)); // Fetch matches for the logged-in user
     }
   }, [user, dispatch]);
-
-  useEffect(() => {
-    setFilteredMatches(matches);
-  }, [matches]);
 
   useEffect(() => {
     // Fetch profile images for each match
@@ -56,38 +51,40 @@ const Matches = () => {
     }
   }, [matches]); // Re-fetch profile images when matches change
 
+  useEffect(() => {
+    filterMatches(searchTerm, filters);
+  }, [matches, searchTerm, filters]);
+
+  // Function to filter matches based on search and filters
+  const filterMatches = (search, appliedFilters) => {
+    let results = matches;
+
+    if (search) {
+      results = results.filter((match) =>
+        match.firstName.toLowerCase().includes(search.toLowerCase()) // Matching case-insensitively
+      );
+    }
+
+    Object.keys(appliedFilters).forEach((key) => {
+      if (appliedFilters[key]) {
+        results = results.filter((match) => 
+          match[key]?.toLowerCase().includes(appliedFilters[key].toLowerCase()) // Matching case-insensitively
+        );
+      }
+    });
+
+    setFilteredMatches(results);
+  };
+
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
-    filterMatches(event.target.value, filters);
   };
 
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
     const updatedFilters = { ...filters, [name]: value };
     setFilters(updatedFilters);
-    filterMatches(searchTerm, updatedFilters);
   };
-
-  const filterMatches = (search, appliedFilters) => {
-    let results = matches;
-  
-    if (search) {
-      results = results.filter((match) =>
-        match.firstName.toLowerCase().includes(search.toLowerCase()) // Matching case-insensitively
-      );
-    }
-  
-    Object.keys(appliedFilters).forEach((key) => {
-      if (appliedFilters[key]) {
-        results = results.filter((match) => 
-          match[key].toLowerCase().includes(appliedFilters[key].toLowerCase()) // Matching case-insensitively
-        );
-      }
-    });
-  
-    setFilteredMatches(results);
-  };
-  
 
   // If user is not logged in, redirect to login page
   if (!user) {
@@ -170,11 +167,7 @@ const Matches = () => {
 
         {/* Display Matches */}
         <div className="row g-4">
-          {loading ? (
-            <p>Loading matches...</p>
-          ) : error ? (
-            <p className="text-danger">{error}</p>
-          ) : filteredMatches.length > 0 ? (
+          {filteredMatches.length > 0 ? (
             filteredMatches.map((match, index) => (
               <div className="col-lg-4 col-md-6 col-sm-12" key={index}>
                 <div className="card shadow-lg border-0 h-100">
