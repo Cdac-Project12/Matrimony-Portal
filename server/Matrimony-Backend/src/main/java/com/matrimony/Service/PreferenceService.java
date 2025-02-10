@@ -10,7 +10,7 @@ import com.matrimony.Entity.User;
 
 public interface PreferenceService {
 
-	Preferences savePreferences(PreferencesDto preferencesDTO, Long id);
+	Preferences savePreferences(Preferences preferences, Long id);
 
 //	List<UserRegisterDto> findMatchingUsers(Long userId);
 

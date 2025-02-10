@@ -18,7 +18,8 @@ public class SecurityConfig {
             .csrf().disable() // Disable CSRF for simplicity (adjust if needed)
             .authorizeRequests(auth -> auth
                 .requestMatchers("/user/signup", "/user/login", "/user/update/**","/user/preferences/save/**", "/user/matches/find/**").permitAll() // Allow signup and login without authentication
-                .requestMatchers("/user/preferences/matches/**").permitAll()
+                .requestMatchers("/user/preferences/matches/**","/messages/conversation" , "/messages/conversations", "/user/**" , "/messages/unreadCount/**","/messages/markAsRead").permitAll()
+                .requestMatchers("/messages/send", "/profile-picture/upload" , "/profile-picture/**","/**","/uploads/profile-pictures/**","/uploads/**").permitAll()
                 .anyRequest().authenticated() // All other routes require authentication
             );
 

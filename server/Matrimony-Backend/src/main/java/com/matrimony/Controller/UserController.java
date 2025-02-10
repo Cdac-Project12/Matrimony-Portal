@@ -59,4 +59,9 @@ public class UserController {
     	System.out.println(updatedUser);
         return userService.updateUser(id, updatedUser);
     }
+    
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
+    }
 }

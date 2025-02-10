@@ -8,7 +8,7 @@ import com.matrimony.Entity.User;
 
 public interface MatchService {
 
-	List<UserRegisterDto> getMatches(Long userId);
+	List<User> getMatches(Long userId);
 
 //	List<UserRegisterDto> getMatchesByUserId(Long userId);
 

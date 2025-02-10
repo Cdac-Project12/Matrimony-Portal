@@ -1,50 +1,39 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import Layout from '../../components/Layout/Layout';
 import Modal from 'react-modal';
+import axios from 'axios';
 
-Modal.setAppElement('#root'); 
+Modal.setAppElement('#root');
 
 const ViewProfile = () => {
   const { name } = useParams();
-  
+  const navigate = useNavigate();
+  const location = useLocation();
+  const match = location.state?.match;
+
+  const [profileImage, setProfileImage] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [modalEmoji, setModalEmoji] = useState('');
 
-  const matches = [
-    {
-      name: 'Samantha Ruthprabhu',
-      bio: 'Loves hiking and photography.',
-      age: 28,
-      height: '5ft 6in',
-      sex: 'Female',
-      education: 'Master’s in Computer Science',
-      img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTA5ABTIqdZJBItCts9_LFVwju2I0SiIYOahA&s',
-    },
-    {
-      name: 'Anushka Shetty',
-      bio: 'Adventurous and loves traveling.',
-      age: 25,
-      height: '5ft 7in',
-      sex: 'Female',
-      education: 'Bachelor’s in Business Administration',
-      img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJBmLOg0R_1CQwY0Uw6Dsp7BFud3Al0ySXGQ&s',
-    },
-    {
-      name: 'Nayanthara',
-      bio: 'Tech enthusiast and gamer.',
-      age: 30,
-      height: '5ft 5in',
-      sex: 'Female',
-      education: 'PhD in Artificial Intelligence',
-      img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUIHRdW2s6u7xR5D5ciXOli5owahPv_QaIfg&s',
-    },
-  ];
+  useEffect(() => {
+    if (match) {
+      const fetchProfileImage = async () => {
+        try {
+          const response = await axios.get('http://localhost:8080/profile-picture', { params: { userId: match.id } });
+          setProfileImage(response.data); // Set profile image URL for the match
+        } catch (error) {
+          console.error("Error fetching profile image", error);
+          setProfileImage('https://media.istockphoto.com/id/1681388313/vector/cute-baby-panda-cartoon-on-white-background.jpg?s=612x612&w=0&k=20&c=qFrzn8TqONiSfwevvkYhys1z80NAmDfw3o-HRdwX0d8=');
+        }
+      };
 
-  const match = matches.find((m) => m.name === name);
+      fetchProfileImage();
+    }
+  }, [match]);
 
-  if (!match) {
+  if (!match || match.firstName !== name) {
     return (
       <Layout>
         <div className="container-fluid p-4">
@@ -56,46 +45,74 @@ const ViewProfile = () => {
 
   const handleButtonClick = (action) => {
     if (action === 'send') {
-      setModalMessage('Invitation message sent!');
-      setModalEmoji('😊'); 
+      setModalMessage('Redirecting to message screen...');
+      setModalEmoji('😊');
+      setIsModalOpen(true);
+
+      setTimeout(() => {
+        navigate(`/messages/${match.id}`);
+      }, 1500);
     } else if (action === 'report') {
       setModalMessage('Profile has been reported!');
       setModalEmoji('😞');
+      setIsModalOpen(true);
     }
-    setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
 
+  const defaultImage =
+    'https://media.istockphoto.com/id/1681388313/vector/cute-baby-panda-cartoon-on-white-background.jpg?s=612x612&w=0&k=20&c=qFrzn8TqONiSfwevvkYhys1z80NAmDfw3o-HRdwX0d8=';
+
   return (
     <Layout>
       <div className="container-fluid p-4 text-center">
         <div className="card shadow-lg p-4 rounded-lg">
+          {/* Display the profile image */}
           <img
-            src={match.img}
-            alt={match.name}
+            src={profileImage || defaultImage}
+            alt={match.firstName}
             className="rounded-circle mb-3 border border-5 border-light"
             style={{ width: '200px', height: '200px', objectFit: 'cover' }}
           />
-          <h1 className="display-4 text-dark font-weight-bold mb-3">{match.name}</h1>
-          <p className="text-muted lead">{match.bio}</p>
-          <div className="mt-4 text-left">
-            <p className="text-muted"><strong>Age:</strong> {match.age}</p>
-            <p className="text-muted"><strong>Height:</strong> {match.height}</p>
-            <p className="text-muted"><strong>Sex:</strong> {match.sex}</p>
-            <p className="text-muted"><strong>Education:</strong> {match.education}</p>
+          <h1 className="display-4 text-dark font-weight-bold mb-3">
+            {match.firstName} {match.lastName}
+          </h1>
+          <p className="text-muted lead">{match.bio || 'Bio not available'}</p>
+
+          <div className="row mt-4">
+            <div className="col-md-6 text-left">
+              <p className="text-muted"><strong>Address:</strong> {match.address || 'Not Available'}</p>
+              <p className="text-muted"><strong>Date of Birth:</strong> {match.dateOfBirth || 'Not Available'}</p>
+              <p className="text-muted"><strong>Email:</strong> {match.email || 'Not Available'}</p>
+              <p className="text-muted"><strong>Phone:</strong> {match.phone || 'Not Available'}</p>
+              <p className="text-muted"><strong>Religion:</strong> {match.religion || 'Not Available'}</p>
+              <p className="text-muted"><strong>Location:</strong> {match.location || 'Not Available'}</p>
+            </div>
+
+            <div className="col-md-6 text-left">
+              <p className="text-muted"><strong>Annual Income:</strong> {match.annualIncome || 'Not Available'}</p>
+              <p className="text-muted"><strong>Caste:</strong> {match.caste || 'Not Available'}</p>
+              <p className="text-muted"><strong>Marital Status:</strong> {match.maritalStatus || 'Not Available'}</p>
+              <p className="text-muted"><strong>Mother Tongue:</strong> {match.motherTongue || 'Not Available'}</p>
+              <p className="text-muted"><strong>Education:</strong> {match.education || 'Not Available'}</p>
+              <p className="text-muted"><strong>Gender:</strong> {match.gender || 'Not Available'}</p>
+              <p className="text-muted"><strong>Hobbies:</strong> {match.hobbies || 'Not Available'}</p>
+              <p className="text-muted"><strong>Profession:</strong> {match.profession || 'Not Available'}</p>
+            </div>
           </div>
+
           <div className="mt-4">
-            <button 
-              className="btn btn-primary btn-lg mx-2" 
+            <button
+              className="btn btn-primary btn-lg mx-2"
               onClick={() => handleButtonClick('send')}
             >
               Send Message
             </button>
-            <button 
-              className="btn btn-danger btn-lg mx-2" 
+            <button
+              className="btn btn-danger btn-lg mx-2"
               onClick={() => handleButtonClick('report')}
             >
               Report Profile
@@ -104,7 +121,7 @@ const ViewProfile = () => {
         </div>
       </div>
 
-      <Modal 
+      <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
         contentLabel="Action Confirmation"
@@ -114,7 +131,9 @@ const ViewProfile = () => {
         <div className="text-center">
           <h3 className="mb-3">{modalMessage}</h3>
           <h1 className="emoji">{modalEmoji}</h1>
-          <button className="btn btn-secondary mt-3" onClick={closeModal}>Close</button>
+          <button className="btn btn-secondary mt-3" onClick={closeModal}>
+            Close
+          </button>
         </div>
       </Modal>
     </Layout>

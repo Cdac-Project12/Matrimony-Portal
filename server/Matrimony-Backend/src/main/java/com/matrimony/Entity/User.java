@@ -61,10 +61,6 @@ public class User {
     @Column(name = "address", columnDefinition = "TEXT")
     private String address;
 
-    @Column(name = "profile_picture", length = 255)
-    @Lob
-    private byte[] profilePicture;
-
     @NotNull(message = "Marital status is mandatory")
     @Enumerated(EnumType.STRING)
     @Column(name = "marital_status", nullable = false)
@@ -100,6 +96,10 @@ public class User {
     
     @Column(name = "location")
     private String location;  // Define location field in User entity
+
+    @Column(name = "subscription_status")
+    private int subscriptionStatus = 0; // Default value is 0 (Inactive)
+
 
 
     public enum Gender {

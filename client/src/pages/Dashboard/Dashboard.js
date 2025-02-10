@@ -1,11 +1,90 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, Link, useNavigate } from 'react-router-dom';
 import Layout from '../../components/Layout/Layout';
+import axios from 'axios';
+import { fetchMatches } from '../../redux/actions';
 
 const Dashboard = () => {
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const matches = useSelector((state) => state.matches);
+  const loading = useSelector((state) => state.loading);
+  const error = useSelector((state) => state.error);
+  const dispatch = useDispatch();
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredMatches, setFilteredMatches] = useState(matches || []);
+  const [filters, setFilters] = useState({
+    age: '',
+    caste: '',
+    religion: '',
+    profession: '',
+  });
+
+  const [profileImages, setProfileImages] = useState({});
+
+  useEffect(() => {
+    if (user) {
+      dispatch(fetchMatches(user.id)); // Fetch matches for the logged-in user
+    }
+  }, [user, dispatch]);
+
+  useEffect(() => {
+    setFilteredMatches(matches);
+  }, [matches]);
+
+  useEffect(() => {
+    const fetchProfileImages = async () => {
+      const newProfileImages = {};
+      for (const match of matches) {
+        try {
+          const response = await axios.get('http://localhost:8080/profile-picture', { params: { userId: match.id } });
+          newProfileImages[match.id] = response.data;
+        } catch (error) {
+          console.error("Error fetching profile image", error);
+          newProfileImages[match.id] = 'https://media.istockphoto.com/id/1681388313/vector/cute-baby-panda-cartoon-on-white-background.jpg?s=612x612&w=0&k=20&c=qFrzn8TqONiSfwevvkYhys1z80NAmDfw3o-HRdwX0d8='; // Default image
+        }
+      }
+      setProfileImages(newProfileImages);
+    };
+
+    if (matches.length > 0) {
+      fetchProfileImages();
+    }
+  }, [matches]);
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+    filterMatches(event.target.value, filters);
+  };
+
+  const handleFilterChange = (event) => {
+    const { name, value } = event.target;
+    const updatedFilters = { ...filters, [name]: value };
+    setFilters(updatedFilters);
+    filterMatches(searchTerm, updatedFilters);
+  };
+
+  const filterMatches = (search, appliedFilters) => {
+    let results = matches;
+
+    if (search) {
+      results = results.filter((match) =>
+        match.firstName.toLowerCase().includes(search.toLowerCase()) 
+      );
+    }
+
+    Object.keys(appliedFilters).forEach((key) => {
+      if (appliedFilters[key]) {
+        results = results.filter((match) =>
+          match[key].toLowerCase().includes(appliedFilters[key].toLowerCase())
+        );
+      }
+    });
+
+    setFilteredMatches(results);
+  };
 
   if (!user) {
     return <Navigate to="/login" />;
@@ -31,29 +110,14 @@ const Dashboard = () => {
     { message: 'Your profile was updated successfully', time: '1 hour ago' },
   ];
 
-  const topMatches = [
-    {
-      name: 'Samantha Ruthprabhu',
-      age: 28,
-      img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTA5ABTIqdZJBItCts9_LFVwju2I0SiIYOahA&s',
-    },
-    {
-      name: 'Anushka Shetty',
-      age: 25,
-      img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJBmLOg0R_1CQwY0Uw6Dsp7BFud3Al0ySXGQ&s',
-    },
-    {
-      name: 'Nayanthara',
-      age: 30,
-      img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUIHRdW2s6u7xR5D5ciXOli5owahPv_QaIfg&s',
-    },
-  ];
-
   const profileCompletion = 85;
 
   const handleViewProfile = (match) => {
     navigate(`/view-profile/${match.name}`, { state: { match } });
   };
+
+  // Limit matches to the top 3
+  const topMatches = filteredMatches.slice(0, 3);
 
   return (
     <Layout>
@@ -113,25 +177,38 @@ const Dashboard = () => {
         <div className="mt-5">
           <h4>Top Matches</h4>
           <div className="row g-4">
-            {topMatches.map((match, index) => (
-              <div className="col-lg-4 col-md-6 col-sm-12" key={index}>
-                <div className="card shadow-lg border-0 h-100">
-                  <div className="card-body text-center">
-                    <img
-                      src={match.img}
-                      className="card-img-top rounded-circle mx-auto mb-3"
-                      alt={match.name}
-                      style={{ width: '150px', height: '150px', objectFit: 'cover' }}
-                    />
-                    <h3 className="card-title mb-2">{match.name}</h3>
-                    <p className="text-muted">Age: {match.age}</p>
-                    <button className="btn btn-primary" onClick={() => handleViewProfile(match)}>
-                      View Profile
-                    </button>
+            {loading ? (
+              <p>Loading matches...</p>
+            ) : error ? (
+              <p className="text-danger">{error}</p>
+            ) : topMatches.length > 0 ? (
+              topMatches.map((match, index) => (
+                <div className="col-lg-4 col-md-6 col-sm-12" key={index}>
+                  <div className="card shadow-lg border-0 h-100">
+                    <div className="card-body text-center">
+                      <img
+                        src={profileImages[match.id] || 'https://media.istockphoto.com/id/1681388313/vector/cute-baby-panda-cartoon-on-white-background.jpg?s=612x612&w=0&k=20&c=qFrzn8TqONiSfwevvkYhys1z80NAmDfw3o-HRdwX0d8='}
+                        className="card-img-top rounded-circle mx-auto mb-3"
+                        alt={match.firstName}
+                        style={{ width: '150px', height: '150px', objectFit: 'cover' }}
+                      />
+                      <h3 className="card-title mb-2">{match.firstName}</h3>
+                      <p className="text-muted">Profession: {match.profession}</p>
+                      <p className="text-muted">Marital Status: {match.maritalStatus}</p>
+                      <p className="text-muted">Date of Birth: {match.dateOfBirth}</p>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => navigate(`/view-profile/${match.firstName}`, { state: { match } })}
+                      >
+                        View Profile
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p>No matches found.</p>
+            )}
           </div>
         </div>
       </div>

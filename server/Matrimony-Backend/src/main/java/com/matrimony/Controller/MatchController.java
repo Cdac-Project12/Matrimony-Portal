@@ -20,28 +20,13 @@ import com.matrimony.Service.MatchService;
 @RequestMapping("/user/matches")
 @CrossOrigin(origins = "http://localhost:3000")
 public class MatchController {
-	 @Autowired
-	    private MatchService matchService;
-	 
-	
-	
+    
+    @Autowired
+    private MatchService matchService;
 
-	     // Endpoint to get matches based on PreferencesDTO
-	     @PostMapping("/find/{Id}")
-	     public List<UserRegisterDto> getMatches(@PathVariable Long Id) {
-	         return matchService.getMatches(Id);
-	     }
-	     
-//	     @GetMapping("/{userId}")
-//	     public List<UserRegisterDto> getMatches(@PathVariable Long userId) {
-//	         return matchService.getMatchesByUserId(userId);
-//	     }
-//	 
-
-  
-
-
-	   
-
-
+    // Endpoint to get matches based on user ID
+    @PostMapping("/find/{Id}")
+    public List<User> getMatches(@PathVariable Long Id) {
+        return matchService.getMatches(Id);
+    }
 }

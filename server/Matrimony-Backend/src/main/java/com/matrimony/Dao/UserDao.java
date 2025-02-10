@@ -28,3 +28,4 @@ public interface UserDao extends JpaRepository<User, Long> {
                                         @Param("religion") String religion,
                                         @Param("userId") Long userId);  // Added userId parameter
 }
+	

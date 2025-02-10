@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { fetchMatches } from '../../redux/actions'; // Importing the fetchMatches action
+import axios from 'axios';
+import { fetchMatches } from '../../redux/actions';
 import Layout from '../../components/Layout/Layout';
 
 const Matches = () => {
-  const user = useSelector((state) => state.user); // User data from Redux store
-  const matches = useSelector((state) => state.matches); // Matches from Redux store
-  const loading = useSelector((state) => state.loading); // Loading state from Redux
-  const error = useSelector((state) => state.error); // Error state from Redux
-  const dispatch = useDispatch(); // To dispatch actions
+  const user = useSelector((state) => state.user);
+  const matches = useSelector((state) => state.matches);
+  const loading = useSelector((state) => state.loading);
+  const error = useSelector((state) => state.error);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -21,29 +22,45 @@ const Matches = () => {
     profession: '',
   });
 
+  // State to store profile images
+  const [profileImages, setProfileImages] = useState({});
+
   useEffect(() => {
-    // If user data is available, fetch matches based on user preferences
     if (user) {
-      dispatch(fetchMatches(user.id)); // Dispatch action to fetch matches for the logged-in user
+      dispatch(fetchMatches(user.id)); // Fetch matches for the logged-in user
     }
-  }, [user, dispatch]); // Dependency on user, re-fetch matches if user changes
+  }, [user, dispatch]);
 
   useEffect(() => {
     setFilteredMatches(matches);
   }, [matches]);
 
-  // If user is not logged in, redirect to login page
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
+  useEffect(() => {
+    // Fetch profile images for each match
+    const fetchProfileImages = async () => {
+      const newProfileImages = {};
+      for (const match of matches) {
+        try {
+          const response = await axios.get('http://localhost:8080/profile-picture', { params: { userId: match.id } });
+          newProfileImages[match.id] = response.data; // Save profile image URL with match id as key
+        } catch (error) {
+          console.error("Error fetching profile image", error);
+          newProfileImages[match.id] = 'https://media.istockphoto.com/id/1681388313/vector/cute-baby-panda-cartoon-on-white-background.jpg?s=612x612&w=0&k=20&c=qFrzn8TqONiSfwevvkYhys1z80NAmDfw3o-HRdwX0d8='; // Default image URL
+        }
+      }
+      setProfileImages(newProfileImages); // Update state with profile images
+    };
 
-  // Handle Search
+    if (matches.length > 0) {
+      fetchProfileImages();
+    }
+  }, [matches]); // Re-fetch profile images when matches change
+
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
     filterMatches(event.target.value, filters);
   };
 
-  // Handle Filter Change
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
     const updatedFilters = { ...filters, [name]: value };
@@ -51,30 +68,37 @@ const Matches = () => {
     filterMatches(searchTerm, updatedFilters);
   };
 
-  // Filter Matches Based on Search & Filters
   const filterMatches = (search, appliedFilters) => {
     let results = matches;
-
+  
     if (search) {
       results = results.filter((match) =>
-        match.firstName.toLowerCase().includes(search.toLowerCase())
+        match.firstName.toLowerCase().includes(search.toLowerCase()) // Matching case-insensitively
       );
     }
-
+  
     Object.keys(appliedFilters).forEach((key) => {
       if (appliedFilters[key]) {
-        results = results.filter((match) => match[key] === appliedFilters[key]);
+        results = results.filter((match) => 
+          match[key].toLowerCase().includes(appliedFilters[key].toLowerCase()) // Matching case-insensitively
+        );
       }
     });
-
+  
     setFilteredMatches(results);
   };
+  
+
+  // If user is not logged in, redirect to login page
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
 
   return (
     <Layout>
       <div className="container-fluid p-4">
         <h1>Matches</h1>
-        
+
         {/* Search Bar */}
         <input
           type="text"
@@ -86,42 +110,60 @@ const Matches = () => {
 
         {/* Filters */}
         <div className="row mb-4">
-          <div className="col-md-3">
-            <select className="form-select" name="age" onChange={handleFilterChange}>
-              <option value="">Filter by Age</option>
+          <div className="col">
+            <select
+              name="age"
+              className="form-select"
+              value={filters.age}
+              onChange={handleFilterChange}
+            >
+              <option value="">Age</option>
+              {/* Populate age options */}
               <option value="18-25">18-25</option>
               <option value="26-35">26-35</option>
               <option value="36-45">36-45</option>
-              <option value="46-60">46-60</option>
             </select>
           </div>
-          <div className="col-md-3">
-            <select className="form-select" name="caste" onChange={handleFilterChange}>
-              <option value="">Filter by Caste</option>
-              <option value="General">General</option>
+          <div className="col">
+            <select
+              name="caste"
+              className="form-select"
+              value={filters.caste}
+              onChange={handleFilterChange}
+            >
+              <option value="">Caste</option>
+              {/* Populate caste options */}
+              <option value="General">GENERAL</option>
               <option value="OBC">OBC</option>
-              <option value="SC">SC</option>
-              <option value="ST">ST</option>
+              <option value="SC/ST">SC/ST</option>
             </select>
           </div>
-          <div className="col-md-3">
-            <select className="form-select" name="religion" onChange={handleFilterChange}>
-              <option value="">Filter by Religion</option>
+          <div className="col">
+            <select
+              name="religion"
+              className="form-select"
+              value={filters.religion}
+              onChange={handleFilterChange}
+            >
+              <option value="">Religion</option>
+              {/* Populate religion options */}
               <option value="Hindu">Hindu</option>
               <option value="Muslim">Muslim</option>
               <option value="Christian">Christian</option>
-              <option value="Sikh">Sikh</option>
             </select>
           </div>
-          <div className="col-md-3">
-            <select className="form-select" name="profession" onChange={handleFilterChange}>
-              <option value="">Filter by Profession</option>
+          <div className="col">
+            <select
+              name="profession"
+              className="form-select"
+              value={filters.profession}
+              onChange={handleFilterChange}
+            >
+              <option value="">Profession</option>
+              {/* Populate profession options */}
               <option value="Engineer">Engineer</option>
               <option value="Doctor">Doctor</option>
               <option value="Teacher">Teacher</option>
-              <option value="Artist">Artist</option>
-              <option value="Lawyer">Lawyer</option>
-              <option value="Entrepreneur">Entrepreneur</option>
             </select>
           </div>
         </div>
@@ -137,8 +179,9 @@ const Matches = () => {
               <div className="col-lg-4 col-md-6 col-sm-12" key={index}>
                 <div className="card shadow-lg border-0 h-100">
                   <div className="card-body text-center">
+                    {/* Fetch profile image from the state */}
                     <img
-                      src={match.img || 'https://media.istockphoto.com/id/1681388313/vector/cute-baby-panda-cartoon-on-white-background.jpg?s=612x612&w=0&k=20&c=qFrzn8TqONiSfwevvkYhys1z80NAmDfw3o-HRdwX0d8='}
+                      src={profileImages[match.id] || 'https://media.istockphoto.com/id/1681388313/vector/cute-baby-panda-cartoon-on-white-background.jpg?s=612x612&w=0&k=20&c=qFrzn8TqONiSfwevvkYhys1z80NAmDfw3o-HRdwX0d8='}
                       className="card-img-top rounded-circle mx-auto mb-3"
                       alt={match.firstName}
                       style={{ width: '150px', height: '150px', objectFit: 'cover' }}
@@ -149,7 +192,7 @@ const Matches = () => {
                     <p className="text-muted">Date of Birth: {match.dateOfBirth}</p>
                     <button
                       className="btn btn-primary"
-                      onClick={() => navigate(`/view-profile/${match.id}`)}
+                      onClick={() => navigate(`/view-profile/${match.firstName}`, { state: { match } })}
                     >
                       View Profile
                     </button>

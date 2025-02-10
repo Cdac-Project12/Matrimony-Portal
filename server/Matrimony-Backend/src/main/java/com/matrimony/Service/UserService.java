@@ -73,7 +73,6 @@ public class UserService {
         if (updatedUser.getEmail() != null) existingUser.setEmail(updatedUser.getEmail());
         if (updatedUser.getPhone() != null) existingUser.setPhone(updatedUser.getPhone());
         if (updatedUser.getAddress() != null) existingUser.setAddress(updatedUser.getAddress());
-        if (updatedUser.getProfilePicture() != null) existingUser.setProfilePicture(updatedUser.getProfilePicture());
         if (updatedUser.getMaritalStatus() != null) existingUser.setMaritalStatus(updatedUser.getMaritalStatus());
         if (updatedUser.getReligion() != null) existingUser.setReligion(updatedUser.getReligion());
         if (updatedUser.getCaste() != null) existingUser.setCaste(updatedUser.getCaste());
@@ -87,5 +86,15 @@ public class UserService {
         userDao.save(existingUser);
 
         return ResponseEntity.ok(existingUser);
+    }
+    
+    
+    public User getUserById(Long id) {
+        Optional<User> user = userDao.findById(id);
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            throw new RuntimeException("User not found");
+        }
     }
 }

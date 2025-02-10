@@ -15,6 +15,7 @@ import MessageScreen from './pages/MessageScreen/MessageScreen';
 import ViewProfile from './pages/ViewProfile/ViewProfile';
 import SelectPreferences from './pages/SelectPreferences/SelectPreferences'; // Adjust this based on the actual relative path
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Subscription from './pages/Subscription/Subscription';
 
 
 
@@ -43,7 +44,8 @@ const App = () => {
         
         <Route path="/SelectPreferences" element={<SelectPreferences />} />
 
-        
+        <Route path="/subscription" element={<Subscription/>} />
+
 
 
       </Routes>
